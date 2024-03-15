@@ -11,7 +11,7 @@ class SpatialHash2<T>(private val cellSize: Double) {
     private val valuesByCell: SetMultimap<Cell2, T> = HashMultimap.create()
 
     val values: Collection<T>
-        get() = valuesByCell.values()
+        get() = valuesByCell.values().toSet()
 
     fun query(instance: Instance, position: Vector2): Collection<T> =
         valuesByCell.get(cell(instance, position, cellSize))
@@ -68,6 +68,11 @@ class SpatialHash2<T>(private val cellSize: Double) {
     fun remove(instance: Instance, position: Vector2, value: T) {
         valuesByCell.remove(cell(instance, position, cellSize), value)
     }
+
+    fun remove(instance: Instance, min: Vector2, max: Vector2, value: T) =
+        cells(instance, min, max, cellSize).forEach { cell ->
+            valuesByCell.remove(cell, value)
+        }
 }
 
 private data class Cell2(
