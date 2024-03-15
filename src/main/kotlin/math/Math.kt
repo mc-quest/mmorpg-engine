@@ -13,8 +13,6 @@ fun clamp(value: Double, min: Double, max: Double) =
 
 fun lerp(a: Double, b: Double, t: Double) = a * (1.0 - t) + b * t
 
-fun roundUpToInt(x: Double) = ceil(x).toInt()
-
 /**
  * Returns the intersection of the line p1-p2 and the line p3-p4.
  */
