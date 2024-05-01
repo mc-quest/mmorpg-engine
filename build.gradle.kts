@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.minestom:minestom:improved-pathfinding-SNAPSHOT")
+    implementation("net.minestom:minestom-snapshots:3de64aafd8")
 
     implementation("com.google.guava:guava:33.0.0-jre")
 
@@ -43,7 +43,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 application {
