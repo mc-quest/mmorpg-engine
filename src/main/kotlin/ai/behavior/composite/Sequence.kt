@@ -21,15 +21,6 @@ class Sequence(children: List<Behavior>) : Composite(children) {
         }
         return BehaviorStatus.SUCCESS
     }
-
-    override fun stop(character: NonPlayerCharacter) {
-        if (currentChild < children.size) {
-            val child = children[currentChild]
-            if (child.status == BehaviorStatus.RUNNING) {
-                child.abort(character)
-            }
-        }
-    }
 }
 
 class SequenceBlueprint(

@@ -1,15 +1,9 @@
 package net.mcquest.engine.math
 
-import kotlin.math.ceil
-
 fun clamp(value: Double, min: Double, max: Double) =
-    if (value < min) {
-        min
-    } else if (value > max) {
-        max
-    } else {
-        value
-    }
+    if (value < min) min
+    else if (value > max) max
+    else value
 
 fun lerp(a: Double, b: Double, t: Double) = a * (1.0 - t) + b * t
 
@@ -66,9 +60,7 @@ fun boxCast(
         }
     }
 
-    if (tMax < 0 || tMin > tMax || tMin > maxDistance) {
-        return null
-    }
+    if (tMax < 0 || tMin > tMax || tMin > maxDistance) return null
 
     return origin + direction * tMin
 }

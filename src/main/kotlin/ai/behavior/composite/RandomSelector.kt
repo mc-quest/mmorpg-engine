@@ -3,13 +3,12 @@ package net.mcquest.engine.ai.behavior.composite
 import com.fasterxml.jackson.databind.JsonNode
 import net.mcquest.engine.ai.behavior.*
 import net.mcquest.engine.character.NonPlayerCharacter
-import kotlin.random.Random
+import net.mcquest.engine.math.weightedRandomIndex
 
 class RandomSelector(
     private val weights: List<Double>,
     children: List<Behavior>
 ) : Composite(children) {
-    private val totalWeight = weights.sum()
     private var currentChild = 0
 
     init {
@@ -18,24 +17,11 @@ class RandomSelector(
     }
 
     override fun start(character: NonPlayerCharacter) {
-        var rand = Random.nextDouble(totalWeight)
-        for (i in children.indices) {
-            rand -= weights[i]
-            if (rand < 0) {
-                currentChild = i
-                break
-            }
-        }
+        currentChild = weightedRandomIndex(weights)
     }
 
     override fun update(character: NonPlayerCharacter) =
         children[currentChild].tick(character)
-
-    override fun stop(character: NonPlayerCharacter) {
-        if (children[currentChild].status == BehaviorStatus.RUNNING) {
-            children[currentChild].abort(character)
-        }
-    }
 }
 
 class RandomSelectorBlueprint(

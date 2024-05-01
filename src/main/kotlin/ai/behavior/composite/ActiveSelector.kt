@@ -34,15 +34,6 @@ class ActiveSelector(children: List<Behavior>) : Composite(children) {
 
         return status
     }
-
-    override fun stop(character: NonPlayerCharacter) {
-        if (currentChild < children.size) {
-            val child = children[currentChild]
-            if (child.status == BehaviorStatus.RUNNING) {
-                child.abort(character)
-            }
-        }
-    }
 }
 
 class ActiveSelectorBlueprint(

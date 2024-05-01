@@ -29,9 +29,23 @@ abstract class Behavior {
     protected open fun stop(character: NonPlayerCharacter) = Unit
 }
 
-abstract class Composite(protected val children: List<Behavior>) : Behavior()
+abstract class Composite(protected val children: List<Behavior>) : Behavior() {
+    override fun stop(character: NonPlayerCharacter) {
+        for (child in children) {
+            if (child.status == BehaviorStatus.RUNNING) {
+                child.abort(character)
+            }
+        }
+    }
+}
 
-abstract class Decorator(protected val child: Behavior) : Behavior()
+abstract class Decorator(protected val child: Behavior) : Behavior() {
+    override fun stop(character: NonPlayerCharacter) {
+        if (child.status == BehaviorStatus.RUNNING) {
+            child.abort(character)
+        }
+    }
+}
 
 abstract class Task : Behavior()
 

@@ -19,11 +19,6 @@ class SimpleParallel(
         secondary.tick(character)
         return status
     }
-
-    override fun stop(character: NonPlayerCharacter) {
-        if (primary.status == BehaviorStatus.RUNNING) primary.abort(character)
-        if (secondary.status == BehaviorStatus.RUNNING) secondary.abort(character)
-    }
 }
 
 class SimpleParallelBlueprint(
