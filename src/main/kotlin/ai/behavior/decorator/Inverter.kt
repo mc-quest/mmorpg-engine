@@ -1,9 +1,7 @@
 package net.mcquest.engine.ai.behavior.decorator
 
-import net.mcquest.engine.ai.behavior.Behavior
-import net.mcquest.engine.ai.behavior.BehaviorBlueprint
-import net.mcquest.engine.ai.behavior.BehaviorStatus
-import net.mcquest.engine.ai.behavior.Decorator
+import com.fasterxml.jackson.databind.JsonNode
+import net.mcquest.engine.ai.behavior.*
 import net.mcquest.engine.character.NonPlayerCharacter
 
 class Inverter(child: Behavior) : Decorator(child) {
@@ -21,3 +19,7 @@ class InverterBlueprint(
 ) : BehaviorBlueprint() {
     override fun create() = Inverter(child.create())
 }
+
+fun deserializeInverterBlueprint(data: JsonNode) = InverterBlueprint(
+    deserializeBehaviorBlueprint(data["child"])
+)

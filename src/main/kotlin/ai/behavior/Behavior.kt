@@ -67,6 +67,8 @@ fun deserializeBehaviorBlueprint(data: JsonNode): BehaviorBlueprint =
         "active_selector" -> deserializeActiveSelectorBlueprint(data)
         "simple_parallel" -> deserializeSimpleParallelBlueprint(data)
         "random_selector" -> deserializeRandomSelectorBlueprint(data)
+        "inverter" -> deserializeInverterBlueprint(data)
+        "loop" -> deserializeLoopBlueprint(data)
         "loop_forever" -> deserializeLoopForever(data)
         "wait" -> deserializeWaitBlueprint(data)
         "cooldown" -> deserializeCooldownReadyBlueprint(data)
