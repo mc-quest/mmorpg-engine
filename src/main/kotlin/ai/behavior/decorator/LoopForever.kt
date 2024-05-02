@@ -16,7 +16,9 @@ class LoopForever(child: Behavior) : Decorator(child) {
     }
 }
 
-class LoopForeverBlueprint(val child: BehaviorBlueprint) : BehaviorBlueprint() {
+class LoopForeverBlueprint(
+    private val child: BehaviorBlueprint
+) : BehaviorBlueprint() {
     override fun create() = LoopForever(child.create())
 }
 
