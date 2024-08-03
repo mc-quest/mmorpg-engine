@@ -65,6 +65,12 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
 
     operator fun div(scalar: Double) = this * (1.0 / scalar)
 
+    fun withX(x: Double) = Vector3(x, y, z)
+
+    fun withY(y: Double) = Vector3(x, y, z)
+
+    fun withZ(z: Double) = Vector3(x, y, z)
+
     fun rotateAroundY(radians: Double): Vector3 {
         val cos = cos(radians)
         val sin = sin(radians)

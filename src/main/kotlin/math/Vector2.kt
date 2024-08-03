@@ -1,5 +1,6 @@
 package net.mcquest.engine.math
 
+import com.fasterxml.jackson.databind.JsonNode
 import kotlin.math.sqrt
 
 data class Vector2(val x: Double, val y: Double) {
@@ -51,3 +52,7 @@ data class Vector2(val x: Double, val y: Double) {
 
     operator fun div(scalar: Double) = Vector2(x / scalar, y / scalar)
 }
+
+fun deserializeVector2(data: JsonNode) = Vector2(
+    data[0].asDouble(), data[1].asDouble()
+)
