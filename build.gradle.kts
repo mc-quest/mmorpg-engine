@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation("net.minestom:minestom-snapshots:3de64aafd8")
+    implementation("net.minestom:minestom-snapshots:19bb74e942")
 
     implementation("com.google.guava:guava:33.0.0-jre")
 
@@ -23,6 +23,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.13.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0")
+
+    implementation("org.python:jython-standalone:2.7.4b2")
 
     implementation("team.unnamed:creative-api:1.5.0")
     implementation("team.unnamed:creative-serializer-minecraft:1.5.0")
