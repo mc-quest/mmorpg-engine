@@ -32,5 +32,5 @@ class LookAtTargetBlueprint(
 }
 
 fun deserializeLookAtTargetBlueprint(data: JsonNode) = LookAtTargetBlueprint(
-    secondsToMillis(data["seconds"].asDouble())
+    secondsToMillis(data["duration"].asDouble())
 )

@@ -27,5 +27,5 @@ class CooldownReadyBlueprint(
 }
 
 fun deserializeCooldownReadyBlueprint(data: JsonNode) = CooldownReadyBlueprint(
-    secondsToMillis(data["duration_seconds"].asDouble())
+    secondsToMillis(data["duration"].asDouble())
 )

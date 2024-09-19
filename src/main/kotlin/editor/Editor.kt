@@ -1,8 +1,8 @@
 package net.mcquest.engine.editor
 
-import java.nio.file.Path
+import java.io.File
 
-class Editor(val path: Path) {
+class Editor(val path: File) {
     fun start() {
         TODO()
     }

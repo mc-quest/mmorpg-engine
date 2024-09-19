@@ -29,5 +29,5 @@ class WaitBlueprint(
 }
 
 fun deserializeWaitBlueprint(data: JsonNode) = WaitBlueprint(
-    secondsToMillis(data["seconds"].asDouble())
+    secondsToMillis(data["duration"].asDouble())
 )
