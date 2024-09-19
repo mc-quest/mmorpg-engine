@@ -9,7 +9,6 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
-    maven("https://repo.unnamed.team/repository/unnamed-public/")
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
@@ -29,9 +28,10 @@ dependencies {
     implementation("team.unnamed:creative-api:1.5.0")
     implementation("team.unnamed:creative-serializer-minecraft:1.5.0")
 
-    implementation("team.unnamed:hephaestus-api:0.9.1-SNAPSHOT")
-    implementation("team.unnamed:hephaestus-reader-blockbench:0.9.1-SNAPSHOT")
-    implementation("team.unnamed:hephaestus-runtime-minestom:0.9.1-SNAPSHOT")
+    implementation("team.unnamed:mocha:3.0.0")
+    implementation("team.unnamed:hephaestus-api:0.11.1-dev-SNAPSHOT")
+    implementation("team.unnamed:hephaestus-reader-blockbench:0.11.1-dev-SNAPSHOT")
+    implementation("team.unnamed:hephaestus-runtime-minestom:0.11.1-dev-SNAPSHOT")
 
     implementation("net.kyori:adventure-text-minimessage:4.16.0")
 
