@@ -3,6 +3,7 @@
 package net.mcquest.engine.script
 
 import net.mcquest.engine.character.NonPlayerCharacterSpawner
+import net.mcquest.engine.character.parseCharacterBlueprintId
 import net.mcquest.engine.runtime.Runtime
 import net.mcquest.engine.time.millisToSeconds
 import net.mcquest.engine.time.secondsToDuration
@@ -20,25 +21,33 @@ import net.minestom.server.timer.Task as EngineTask
 class ScriptLibrary(val runtime: Runtime) {
     fun load(interpreter: PythonInterpreter) {
         interpreter.set("get_time", GetTime())
-        interpreter.set("spawn_character", this::spawn_character)
+        interpreter.set("spawn_character", SpawnCharacter())
         interpreter.set("spawn_particle", this::spawn_particle)
         interpreter.set("play_sound", this::play_sound)
         interpreter.set("run_delayed", this::run_delayed)
     }
 
-    private inner class GetTime : PyBuiltinFunction("get_time", null) {
+    private inner class GetTime : PyObject() {
         override fun __call__(): PyObject = Py.java2py(millisToSeconds(runtime.timeMillis))
     }
 
-    private fun spawn_character(character: String, instance: Instance, position: Position) =
-        runtime.gameObjectManager.spawn(
-            NonPlayerCharacterSpawner(
-                convertInstance(instance, runtime),
-                ScriptToEngine.position(position),
-                runtime.nonPlayerCharacterManager.getBlueprint(character)
-            ),
-            runtime
-        )
+    private inner class SpawnCharacter : PyObject() {
+        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
+            val instance = args[0].__tojava__(Instance::class.java) as Instance
+            val position = args[1].__tojava__(Position::class.java) as Position
+            val blueprintId = parseCharacterBlueprintId(args[2].asString())
+            val blueprint = runtime.nonPlayerCharacterManager.getBlueprint(blueprintId)
+            val character = runtime.gameObjectManager.spawn(
+                NonPlayerCharacterSpawner(
+                    instance.handle,
+                    ScriptToEngine.position(position),
+                    blueprint
+                ),
+                runtime
+            ) as EngineNonPlayerCharacter
+            return Py.java2py(character.handle)
+        }
+    }
 
     private fun play_sound(instance: Instance, position: Vector3, sound: Sound) =
         runtime.soundManager.playSound(
@@ -50,7 +59,7 @@ class ScriptLibrary(val runtime: Runtime) {
     private fun spawn_particle(particle: String, instance: Instance, position: Vector3) =
         runtime.particleManager.spawnParticle(
             Particle.fromNamespaceId(particle) ?: throw IllegalArgumentException(),
-            convertInstance(instance, runtime),
+            instance.handle,
             ScriptToEngine.vector3(position)
         )
 
@@ -83,6 +92,12 @@ data class Vector3(val x: Double, val y: Double, val z: Double) {
         val FORWARD = Vector3(0.0, 0.0, 1.0)
         val BACK = Vector3(0.0, 0.0, -1.0)
     }
+
+    fun __add__(v: Vector3) = Vector3(x + v.x, y + v.y, z + v.z)
+
+    fun __sub__(v: Vector3) = Vector3(x - v.x, y - v.y, z - v.z)
+
+    fun __mul__(s: Double) = Vector3(x * s, y * s, z * s)
 }
 
 data class Position(
@@ -100,6 +115,9 @@ open class Character(
 ) {
     val is_on_ground
         get() = handle.isOnGround
+
+    val instance
+        get() = handle.instance.handle
 
     val position
         get() = EngineToScript.position(handle.position)
@@ -121,10 +139,6 @@ open class NonPlayerCharacter(
 
     open fun on_despawn() = Unit
 }
-
-// TODO: remove this
-private fun convertInstance(instance: Instance, runtime: Runtime) =
-    runtime.instanceManager.getInstance(instance.id)
 
 open class SkillExecutor(private val handle: EngineSkillExecutor) {
     private val lifetime
