@@ -262,7 +262,7 @@ fun <T : Any> loadScript(
           def __init__(self, handle):
             NonPlayerCharacter.__init__(self, handle)
     """.trimIndent()
-    script?.let { wrappedScript += "\n${it.prependIndent("  ")}" }
+    script?.let { wrappedScript += "\n\n${it.prependIndent("  ")}" }
     interpreter.exec(wrappedScript)
     return interpreter.get(className) as PyType
 }
