@@ -5,6 +5,7 @@ import net.mcquest.engine.math.Vector2Int
 import net.mcquest.engine.resource.parseId
 import net.mcquest.engine.runtime.Runtime
 import net.mcquest.engine.world.parseWorldId
+import net.mcquest.engine.script.Instance as ScriptInstance
 import net.minestom.server.instance.InstanceContainer
 import net.minestom.server.instance.AnvilLoader
 import net.minestom.server.world.DimensionType
@@ -14,6 +15,7 @@ import java.util.*
 private const val CHUNK_UNLOAD_DELAY_MILLIS = 3000
 
 class Instance(val id: String, worldFile: File) {
+    val handle = ScriptInstance(this)
     val instanceContainer = InstanceContainer(
         UUID.randomUUID(),
         DimensionType.OVERWORLD,
