@@ -8,7 +8,6 @@ import net.minestom.server.entity.EntityCreature
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.other.ArmorStandMeta
 import team.unnamed.hephaestus.Model
-import team.unnamed.hephaestus.minestom.MinestomModelEngine
 import team.unnamed.hephaestus.minestom.ModelEntity
 
 abstract class CharacterModel {
@@ -16,8 +15,8 @@ abstract class CharacterModel {
 }
 
 class BlockbenchCharacterModel(
-    private val model: BlockbenchModel,
-    private val scale: Float = 1.0F
+    val model: BlockbenchModel,
+    val scale: Float = 1.0F
 ) : CharacterModel() {
     override fun createEntity(): ModelEntity =
         BlockbenchCharacterModelEntity(model.model, scale)
