@@ -114,7 +114,7 @@ data class Position(
     val yaw: Double,
     val pitch: Double
 ) {
-    private fun to_vector3() = Vector3(x, y, z)
+    fun to_vector3() = Vector3(x, y, z)
 }
 
 open class Character(
