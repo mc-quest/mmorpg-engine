@@ -25,11 +25,11 @@ class PackBuilder(root: File) {
         writePackMeta()
         writeBasePack()
         writeEngineModels()
-        writeEngineAudioClips()
+        writeEngineSoundAssets()
         writeModels()
         writeItemModels()
         writeMusic()
-        writeAudioClips()
+        writeSoundAssets()
         disableMinecraftMusic()
         savePack()
     }
@@ -47,35 +47,22 @@ class PackBuilder(root: File) {
         // TODO
     }
 
-    private fun writeEngineAudioClips() {
-        // TODO: replace this
-        val key = Key.key(Namespaces.ENGINE_AUDIO_CLIPS, "quest_start")
-        val sound = Sound.sound(
-            key,
-            Writable.resource(this::class.java.classLoader, "audio_clips/quest_start.ogg")
-        )
-        val soundEvent = SoundEvent.soundEvent(
-            key,
-            false,
-            null,
-            listOf(SoundEntry.soundEntry(sound))
-        )
-        pack.sound(sound)
-        pack.soundEvent(soundEvent)
-
-        val key2 = Key.key(Namespaces.ENGINE_AUDIO_CLIPS, "quest_complete")
-        val sound2 = Sound.sound(
-            key2,
-            Writable.resource(this::class.java.classLoader, "audio_clips/quest_complete.ogg")
-        )
-        val soundEvent2 = SoundEvent.soundEvent(
-            key2,
-            false,
-            null,
-            listOf(SoundEntry.soundEntry(sound2))
-        )
-        pack.sound(sound2)
-        pack.soundEvent(soundEvent2)
+    private fun writeEngineSoundAssets() {
+        listOf("quest_start", "quest_complete").forEach {
+            val key = Key.key(Namespaces.ENGINE_SOUNDS, it)
+            val sound = Sound.sound(
+                key,
+                Writable.resource(this::class.java.classLoader, "sounds/${it}.ogg")
+            )
+            val soundEvent = SoundEvent.soundEvent(
+                key,
+                false,
+                null,
+                listOf(SoundEntry.soundEntry(sound))
+            )
+            pack.sound(sound)
+            pack.soundEvent(soundEvent)
+        }
     }
 
     private fun writeModels() {
@@ -141,15 +128,15 @@ class PackBuilder(root: File) {
         }
     }
 
-    private fun writeAudioClips() {
-        val audioClipAssets = resourceLoader.loadAudioClipAssets().values
-        audioClipAssets.forEach { audioClipAsset ->
+    private fun writeSoundAssets() {
+        val soundAssets = resourceLoader.loadSoundAssets().values
+        soundAssets.forEach {
             val sound = Sound.sound(
-                audioClipAsset.key,
-                Writable.file(audioClipAsset.file)
+                it.key,
+                Writable.file(it.file)
             )
             val soundEvent = SoundEvent.soundEvent(
-                audioClipAsset.key,
+                it.key,
                 false,
                 null,
                 listOf(SoundEntry.soundEntry(sound))

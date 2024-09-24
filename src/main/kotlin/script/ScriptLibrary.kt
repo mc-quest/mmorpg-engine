@@ -23,7 +23,7 @@ class ScriptLibrary(val runtime: Runtime) {
         interpreter.set("get_time", GetTime())
         interpreter.set("spawn_character", SpawnCharacter())
         interpreter.set("spawn_particle", this::spawn_particle)
-        interpreter.set("play_sound", this::play_sound)
+        interpreter.set("play_sound", PlaySound())
         interpreter.set("run_delayed", this::run_delayed)
     }
 
@@ -49,12 +49,19 @@ class ScriptLibrary(val runtime: Runtime) {
         }
     }
 
-    private fun play_sound(instance: Instance, position: Vector3, sound: Sound) =
-        runtime.soundManager.playSound(
-            instance.handle,
-            ScriptToEngine.vector3(position),
-            ScriptToEngine.sound(sound)
-        )
+    private inner class PlaySound : PyObject() {
+        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
+            val instance = args[0].__tojava__(Instance::class.java) as Instance
+            val position = args[1].__tojava__(Vector3::class.java) as Vector3
+            val sound = args[2].__tojava__(Sound::class.java) as Sound
+            runtime.soundManager.playSound(
+                instance.handle,
+                ScriptToEngine.vector3(position),
+                ScriptToEngine.sound(sound)
+            )
+            return Py.None
+        }
+    }
 
     private fun spawn_particle(particle: String, instance: Instance, position: Vector3) =
         runtime.particleManager.spawnParticle(

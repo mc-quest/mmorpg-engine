@@ -12,7 +12,7 @@ fun deserializeSound(data: JsonNode) =
         1.0F
     )
     else Sound.sound(
-        Key.key(data["clip"].asText()),
+        Key.key(data["name"].asText()),
         data["source"]?.asText()?.uppercase()?.let(Sound.Source::valueOf)
             ?: Sound.Source.MASTER,
         data["volume"]?.floatValue() ?: 1.0F,

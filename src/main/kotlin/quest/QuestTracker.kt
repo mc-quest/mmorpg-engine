@@ -39,7 +39,7 @@ class QuestTracker(
         // TODO: clean up
         pc.playSound(
             Sound.sound(
-                Key.key(Namespaces.ENGINE_AUDIO_CLIPS, "quest_start"),
+                Key.key(Namespaces.ENGINE_SOUNDS, "quest_start"),
                 Sound.Source.MASTER,
                 1.0F,
                 1.0F
@@ -62,7 +62,7 @@ class QuestTracker(
 
         pc.playSound(
             Sound.sound(
-                Key.key(Namespaces.ENGINE_AUDIO_CLIPS, "quest_complete"),
+                Key.key(Namespaces.ENGINE_SOUNDS, "quest_complete"),
                 Sound.Source.MASTER,
                 1.0F,
                 1.0F

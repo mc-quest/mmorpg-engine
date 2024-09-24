@@ -1,12 +1,13 @@
 package net.mcquest.engine.sound
 
 import net.kyori.adventure.key.Key
+import net.mcquest.engine.pack.Namespaces
 import java.io.File
 
-class AudioClipAsset(val id: String, val file: File) {
-    val key = audioClipKey(id)
+class SoundAsset(val id: String, val file: File) {
+    val key = soundKey(id)
 }
 
-fun deserializeAudioClipAsset(id: String, file: File) = AudioClipAsset(id, file)
+fun deserializeSoundAsset(id: String, file: File) = SoundAsset(id, file)
 
-private fun audioClipKey(id: String) = Key.key("audio_clips", id)
+private fun soundKey(id: String) = Key.key(Namespaces.SOUNDS, id)

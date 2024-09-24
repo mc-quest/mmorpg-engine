@@ -24,7 +24,7 @@ import net.mcquest.engine.quest.deserializeQuest
 import net.mcquest.engine.script.loadScriptClasses
 import net.mcquest.engine.skill.Skill
 import net.mcquest.engine.skill.deserializeSkill
-import net.mcquest.engine.sound.deserializeAudioClipAsset
+import net.mcquest.engine.sound.deserializeSoundAsset
 import net.mcquest.engine.zone.Zone
 import net.mcquest.engine.zone.deserializeZone
 import net.minestom.server.MinecraftServer
@@ -97,7 +97,7 @@ class ResourceLoader(private val root: File) {
 
     fun loadMusicAssets() = loadIdentifiedResources("music", ::deserializeSongAsset)
 
-    fun loadAudioClipAssets() = loadIdentifiedResources("audio_clips", ::deserializeAudioClipAsset)
+    fun loadSoundAssets() = loadIdentifiedResources("sounds", ::deserializeSoundAsset)
 
     fun loadModels(): Map<String, BlockbenchModel> {
         val modelReader = BBModelReader.blockbench(ModelDataCursor(0))
