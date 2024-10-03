@@ -17,7 +17,7 @@ class SkillExecutor(
     val lifetimeMillis
         get() = pc.runtime.timeMillis - startTimeMillis
 
-    fun beginCast() = handle.begin_cast()
+    fun init() = handle.init()
 
     fun tick() {
         handle.tick()

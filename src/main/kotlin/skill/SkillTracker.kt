@@ -39,7 +39,7 @@ class SkillTracker(private val pc: PlayerCharacter) {
 
     private fun useSkill(skill: Skill) {
         val skillExecutor = SkillExecutor(pc, skill, pc.runtime.timeMillis)
-        skillExecutor.beginCast()
+        skillExecutor.init()
         skillExecutors.add(skillExecutor)
     }
 
