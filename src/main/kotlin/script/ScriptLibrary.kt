@@ -20,11 +20,11 @@ import net.minestom.server.timer.Task as EngineTask
 
 class ScriptLibrary(val runtime: Runtime) {
     fun load(interpreter: PythonInterpreter) {
-        interpreter.set("get_time", GetTime())
-        interpreter.set("spawn_character", SpawnCharacter())
-        interpreter.set("spawn_particle", this::spawn_particle)
-        interpreter.set("play_sound", PlaySound())
-        interpreter.set("run_delayed", this::run_delayed)
+        interpreter["get_time"] = GetTime()
+        interpreter["spawn_character"] = SpawnCharacter()
+        interpreter["spawn_particle"] = SpawnParticle()
+        interpreter["play_sound"] = PlaySound()
+        interpreter["run_delayed"] = RunDelayed()
     }
 
     private inner class GetTime : PyObject() {
@@ -52,7 +52,7 @@ class ScriptLibrary(val runtime: Runtime) {
     private inner class PlaySound : PyObject() {
         override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
             val instance = args[0].__tojava__(Instance::class.java) as Instance
-            val position = args[1].__tojava__(Vector3::class.java) as Vector3
+            val position = args[1].__tojava__(Vector::class.java) as Vector
             val sound = args[2].__tojava__(Sound::class.java) as Sound
             runtime.soundManager.playSound(
                 instance.handle,
@@ -63,23 +63,40 @@ class ScriptLibrary(val runtime: Runtime) {
         }
     }
 
-    private fun spawn_particle(particle: String, instance: Instance, position: Vector3) =
-        runtime.particleManager.spawnParticle(
-            Particle.fromNamespaceId(particle) ?: throw IllegalArgumentException(),
-            instance.handle,
-            ScriptToEngine.vector3(position)
-        )
+    private inner class SpawnParticle : PyObject() {
+        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
+            val instance = args[0].__tojava__(Instance::class.java) as Instance
+            val position = args[1].__tojava__(Vector::class.java) as Vector
+            val particle = args[2].asString()
+            Particle.fromNamespaceId(particle)?.let {
+                runtime.particleManager.spawnParticle(
+                    it,
+                    instance.handle,
+                    ScriptToEngine.vector3(position)
+                )
+            }
+            return Py.None
+        }
+    }
 
-    private fun run_delayed(task: PyFunction, seconds: Double) = Task(
-        schedulerManager.buildTask(task::__call__)
-            .delay(secondsToDuration(seconds))
-            .schedule()
-    )
+    private inner class RunDelayed : PyObject() {
+        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
+            val task = args[0]
+            val delay = args[1].asDouble()
+            return Py.java2py(
+                Task(
+                    schedulerManager.buildTask(task::__call__).delay(secondsToDuration(delay)).schedule()
+                )
+            )
+        }
+    }
 }
 
 class Instance(val handle: EngineInstance) {
     val id: String
         get() = handle.id
+
+    fun spawn_character(position: Position, character: String) = Unit
 }
 
 class Task(private val handle: EngineTask) {
@@ -88,33 +105,45 @@ class Task(private val handle: EngineTask) {
 
 data class Sound(val name: String, val volume: Float, val pitch: Float)
 
-data class Vector3(val x: Double, val y: Double, val z: Double) {
+interface Point {
+    val x: Double
+    val y: Double
+    val z: Double
+}
+
+data class Vector(
+    override val x: Double,
+    override val y: Double,
+    override val z: Double
+) : Point {
     companion object {
-        val ZERO = Vector3(0.0, 0.0, 0.0)
-        val ONE = Vector3(1.0, 1.0, 1.0)
-        val LEFT = Vector3(1.0, 0.0, 0.0)
-        val RIGHT = Vector3(-1.0, 0.0, 0.0)
-        val UP = Vector3(0.0, 1.0, 0.0)
-        val DOWN = Vector3(0.0, -1.0, 0.0)
-        val FORWARD = Vector3(0.0, 0.0, 1.0)
-        val BACK = Vector3(0.0, 0.0, -1.0)
+        val ZERO = Vector(0.0, 0.0, 0.0)
+        val ONE = Vector(1.0, 1.0, 1.0)
+        val LEFT = Vector(1.0, 0.0, 0.0)
+        val RIGHT = Vector(-1.0, 0.0, 0.0)
+        val UP = Vector(0.0, 1.0, 0.0)
+        val DOWN = Vector(0.0, -1.0, 0.0)
+        val FORWARD = Vector(0.0, 0.0, 1.0)
+        val BACK = Vector(0.0, 0.0, -1.0)
     }
 
-    fun __add__(v: Vector3) = Vector3(x + v.x, y + v.y, z + v.z)
+    fun __add__(v: Vector) = Vector(x + v.x, y + v.y, z + v.z)
 
-    fun __sub__(v: Vector3) = Vector3(x - v.x, y - v.y, z - v.z)
+    fun __sub__(v: Vector) = Vector(x - v.x, y - v.y, z - v.z)
 
-    fun __mul__(s: Double) = Vector3(x * s, y * s, z * s)
+    fun __mul__(s: Double) = Vector(x * s, y * s, z * s)
 }
 
 data class Position(
-    val x: Double,
-    val y: Double,
-    val z: Double,
+    override val x: Double,
+    override val y: Double,
+    override val z: Double,
     val yaw: Double,
     val pitch: Double
-) {
-    fun to_vector3() = Vector3(x, y, z)
+) : Point {
+    fun __add__(v: Vector) = Position(x + v.x, y + v.y, z + v.z, yaw, pitch)
+
+    fun __sub__(v: Vector) = Position(x - v.x, y - v.y, z - v.z, yaw, pitch)
 }
 
 open class Character(
@@ -153,15 +182,15 @@ open class SkillExecutor(private val handle: EngineSkillExecutor) {
 
     fun complete() = handle.complete()
 
-    open fun begin_cast() = Unit
+    open fun init() = Unit
 
     open fun tick() = Unit
 }
 
 fun loadScriptClasses(interpreter: PythonInterpreter) {
-    interpreter.set("Vector3", Vector3::class.java)
-    interpreter.set("Position", Position::class.java)
-    interpreter.set("Sound", Sound::class.java)
-    interpreter.set("NonPlayerCharacter", NonPlayerCharacter::class.java)
-    interpreter.set("SkillExecutor", SkillExecutor::class.java)
+    interpreter["Vector"] = Vector::class.java
+    interpreter["Position"] = Position::class.java
+    interpreter["Sound"] = Sound::class.java
+    interpreter["NonPlayerCharacter"] = NonPlayerCharacter::class.java
+    interpreter["SkillExecutor"] = SkillExecutor::class.java
 }
