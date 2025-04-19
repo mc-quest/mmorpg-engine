@@ -49,6 +49,12 @@ data class Position(
         yaw,
         pitch
     )
+
+    fun localToGlobalDirection(localDirection: Vector3) =
+        localDirection.rotateAroundY(toRadians(-yaw))
+
+    fun globalToLocalDirection(globalDirection: Vector3) =
+        globalDirection.rotateAroundY(toRadians(yaw))
 }
 
 fun deserializePosition(data: JsonNode) =

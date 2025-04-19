@@ -30,10 +30,8 @@ fun lineIntersection(
     }
 }
 
-fun overlapBox(
-    min1: Vector3, max1: Vector3,
-    min2: Vector3, max2: Vector3
-) = coordinateWiseLeq(min1, max2) && coordinateWiseLeq(min2, max1)
+fun overlapBox(a: BoundingBox3, b: BoundingBox3) =
+    coordinateWiseLeq(a.min, b.max) && coordinateWiseLeq(b.min, a.min)
 
 fun coordinateWiseLeq(a: Vector2, b: Vector2) =
     a.x <= b.x && a.y <= b.y
