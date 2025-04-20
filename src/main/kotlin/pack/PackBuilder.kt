@@ -17,8 +17,7 @@ import team.unnamed.creative.sound.SoundRegistry
 import team.unnamed.hephaestus.writer.ModelWriter
 import java.io.File
 
-class PackBuilder(root: File) {
-    private val resourceLoader = ResourceLoader(root)
+class PackBuilder(private val resourceLoader: ResourceLoader) {
     private val pack = ResourcePack.resourcePack()
 
     fun build() {

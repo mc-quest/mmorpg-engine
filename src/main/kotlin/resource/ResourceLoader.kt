@@ -192,7 +192,6 @@ class ResourceLoader(private val root: File) {
             } catch (e: Exception) {
                 val prefix = dir.relativeTo(root).path
                 System.err.println("Error loading resource $prefix:$id")
-                e.printStackTrace()
                 null
             }
             resource?.let { id to it }

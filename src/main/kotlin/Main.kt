@@ -1,6 +1,5 @@
 package net.mcquest.engine
 
-import net.mcquest.engine.editor.Editor
 import net.mcquest.engine.pack.PackBuilder
 import net.mcquest.engine.resource.ResourceLoader
 import net.mcquest.engine.runtime.Runtime
@@ -16,7 +15,6 @@ fun main(args: Array<String>) {
     when (command) {
         "runtime" -> startRuntime(root)
         "pack" -> buildPack(root)
-        "editor" -> startEditor(root)
         else -> usage()
     }
 }
@@ -27,9 +25,11 @@ fun startRuntime(root: File) {
     runtime.start()
 }
 
-fun buildPack(root: File) = PackBuilder(root).build()
-
-fun startEditor(root: File) = Editor(root).start()
+fun buildPack(root: File) {
+    val resourceLoader = ResourceLoader(root)
+    val packBuilder = PackBuilder(resourceLoader)
+    packBuilder.build()
+}
 
 fun usage() {
     System.err.println("Usage: <runtime|pack|editor> <path/to/project>")
