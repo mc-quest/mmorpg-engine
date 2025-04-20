@@ -20,6 +20,6 @@ class PlayAnimationBlueprint(
     override fun create(): Behavior = PlayAnimation(animation)
 }
 
-fun deserializePlayAnimation(data: JsonNode) = PlayAnimationBlueprint(
+fun deserializePlayAnimationBlueprint(data: JsonNode) = PlayAnimationBlueprint(
     data["animation"].asText()
 )

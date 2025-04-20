@@ -1,33 +1,34 @@
 package net.mcquest.engine.ai.behavior.task
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.kyori.adventure.sound.Sound
 import net.mcquest.engine.ai.behavior.BehaviorBlueprint
 import net.mcquest.engine.ai.behavior.BehaviorStatus
 import net.mcquest.engine.ai.behavior.Task
 import net.mcquest.engine.character.NonPlayerCharacter
 import net.mcquest.engine.math.Vector3
 import net.mcquest.engine.math.deserializeVector3
-import net.mcquest.engine.sound.deserializeSound
+import net.mcquest.engine.particle.deserializeParticle
+import net.minestom.server.particle.Particle
 
-class EmitSound(
-    private val sound: Sound,
+class EmitParticle(
+    private val particle: Particle,
     private val offset: Vector3
 ) : Task() {
     override fun update(character: NonPlayerCharacter): BehaviorStatus {
-        character.emitSound(sound, offset)
+        val position = character.position.toVector3() + character.position.localToGlobalDirection(offset)
+        character.instance.spawnParticle(position, particle)
         return BehaviorStatus.SUCCESS
     }
 }
 
-class EmitSoundBlueprint(
-    private val sound: Sound,
+class EmitParticleBlueprint(
+    private val particle: Particle,
     private val offset: Vector3
 ) : BehaviorBlueprint() {
-    override fun create() = EmitSound(sound, offset)
+    override fun create() = EmitParticle(particle, offset)
 }
 
-fun deserializeEmitSoundBlueprint(data: JsonNode) = EmitSoundBlueprint(
-    deserializeSound(data["sound"]),
+fun deserializeEmitParticleBlueprint(data: JsonNode) = EmitParticleBlueprint(
+    deserializeParticle(data["particle"]),
     data["offset"]?.let(::deserializeVector3) ?: Vector3.ZERO
 )

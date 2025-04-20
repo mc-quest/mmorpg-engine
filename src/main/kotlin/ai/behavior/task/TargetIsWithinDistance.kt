@@ -27,5 +27,5 @@ class TargetIsWithinDistanceBlueprint(
     override fun create() = TargetIsWithinDistance(distance)
 }
 
-fun deserializeTargetIsWithinDistance(data: JsonNode) =
+fun deserializeTargetIsWithinDistanceBlueprint(data: JsonNode) =
     TargetIsWithinDistanceBlueprint(data["distance"].asDouble())

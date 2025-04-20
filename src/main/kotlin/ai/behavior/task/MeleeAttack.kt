@@ -5,15 +5,15 @@ import net.kyori.adventure.sound.Sound
 import net.mcquest.engine.ai.behavior.BehaviorBlueprint
 import net.mcquest.engine.ai.behavior.BehaviorStatus
 import net.mcquest.engine.ai.behavior.Task
+import net.mcquest.engine.character.Character
 import net.mcquest.engine.character.NonPlayerCharacter
 import net.mcquest.engine.character.Stance
 import net.mcquest.engine.combat.Damage
 import net.mcquest.engine.combat.deserializeDamage
-import net.mcquest.engine.combat.getCharactersInBox
+import net.mcquest.engine.math.BoundingBox3
 import net.mcquest.engine.math.Vector3
 import net.mcquest.engine.math.deserializeVector3
 import net.mcquest.engine.sound.deserializeSound
-import java.lang.Math.toRadians
 
 class MeleeAttack(
     private val damage: Damage,
@@ -25,42 +25,20 @@ class MeleeAttack(
     private val missSound: Sound?
 ) : Task() {
     override fun update(character: NonPlayerCharacter): BehaviorStatus {
-        val center = character.position.toVector3() +
-                hitboxOffset.rotateAroundY(toRadians(-character.position.yaw))
+        val center = character.position.toVector3() + character.position.localToGlobalDirection(hitboxOffset)
         val halfExtents = Vector3(hitboxWidth, hitboxHeight, hitboxWidth) / 2.0
-        val hits = getCharactersInBox(
-            character.runtime.collisionManager,
-            character.instance,
-            center,
-            halfExtents
-        ).filter { other ->
-            other != character &&
-                    other.isAlive &&
-                    character.getStance(other) == Stance.HOSTILE
-        }
+        val hits = character.instance.getObjectsInBox<Character>(BoundingBox3.from(center, halfExtents))
+            .filter { it != character && it.isAlive && character.getStance(it) == Stance.HOSTILE }
 
         if (hits.isEmpty()) {
-            missSound?.let {
-                character.runtime.soundManager.playSound(
-                    character.instance,
-                    center,
-                    it
-                )
-            }
+            missSound?.let { character.instance.playSound(center, it) }
         } else {
-            hitSound?.let {
-                character.runtime.soundManager.playSound(
-                    character.instance,
-                    center,
-                    it
-                )
-            }
+            hitSound?.let { character.instance.playSound(center, it) }
 
-            val globalKnockback =
-                knockback.rotateAroundY(toRadians(-character.position.yaw))
-            hits.forEach { hit ->
-                hit.damage(damage, character)
-                hit.applyImpulse(globalKnockback)
+            val globalKnockback = character.position.localToGlobalDirection(knockback)
+            hits.forEach {
+                it.damage(damage, character)
+                it.applyImpulse(globalKnockback)
             }
         }
 
@@ -88,7 +66,7 @@ class MeleeAttackBlueprint(
     )
 }
 
-fun deserializeMeleeAttack(data: JsonNode) = MeleeAttackBlueprint(
+fun deserializeMeleeAttackBlueprint(data: JsonNode) = MeleeAttackBlueprint(
     deserializeDamage(data["damage"]),
     deserializeVector3(data["hitbox_offset"]),
     data["hitbox_width"].asDouble(),

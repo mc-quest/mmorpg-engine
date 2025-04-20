@@ -22,6 +22,6 @@ class LoopForeverBlueprint(
     override fun create() = LoopForever(child.create())
 }
 
-fun deserializeLoopForever(data: JsonNode) = LoopForeverBlueprint(
+fun deserializeLoopForeverBlueprint(data: JsonNode) = LoopForeverBlueprint(
     deserializeBehaviorBlueprint(data["child"])
 )
