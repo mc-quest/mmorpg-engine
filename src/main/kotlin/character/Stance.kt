@@ -20,7 +20,10 @@ class Stances(
             friendlyIds.contains(id) -> Stance.FRIENDLY
             neutralIds.contains(id) -> Stance.NEUTRAL
             hostileIds.contains(id) -> Stance.HOSTILE
-            else -> default
+            else -> {
+                val rootSummoner = toward.rootSummoner
+                if (rootSummoner is PlayerCharacter) stance(rootSummoner) else default
+            }
         }
     }
 }
