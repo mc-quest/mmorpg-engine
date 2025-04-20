@@ -8,25 +8,27 @@ import net.mcquest.engine.math.deserializePosition
 import net.mcquest.engine.runtime.Runtime
 
 class NonPlayerCharacterSpawner(
-    instance: Instance,
     position: Position,
-    val blueprint: CharacterBlueprint
-) : GameObjectSpawner(instance, position) {
-    override fun start(runtime: Runtime) {
-        // TODO: quest markers
-    }
+    val blueprint: CharacterBlueprint,
+    val summoner: Character? = null
+) : GameObjectSpawner(position) {
+    override fun start(instance: Instance) =
+        blueprint.interactions.forEach { it.start(instance, position) }
 
-    override fun spawn(runtime: Runtime) = NonPlayerCharacter(runtime, this)
+    override fun spawn(instance: Instance, runtime: Runtime) =
+        NonPlayerCharacter(this, instance, runtime)
 }
 
-fun deserializeNonPlayerCharacterSpawner(
+fun deserializeNonPlayerCharacterSpawners(
     data: JsonNode,
-    instance: Instance,
     characterBlueprintsById: Map<String, CharacterBlueprint>
-) = NonPlayerCharacterSpawner(
-    instance,
-    deserializePosition(data["position"]),
-    characterBlueprintsById.getValue(
-        parseCharacterBlueprintId(data["character"].asText())
-    )
-)
+): Collection<NonPlayerCharacterSpawner> {
+    val blueprint = characterBlueprintsById.getValue(parseCharacterBlueprintId(data["character"].asText()))
+    return if (data.has("position")) {
+        listOf(NonPlayerCharacterSpawner(deserializePosition(data["position"]), blueprint))
+    } else if (data.has("positions")) {
+        data["positions"].map { NonPlayerCharacterSpawner(deserializePosition(it), blueprint) }
+    } else {
+        throw IllegalArgumentException()
+    }
+}
