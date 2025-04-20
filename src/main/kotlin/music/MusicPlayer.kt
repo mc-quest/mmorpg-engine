@@ -10,6 +10,8 @@ class MusicPlayer(private val pc: PlayerCharacter) {
     private var replayTask: Task? = null
 
     fun setSong(song: Song?) {
+        if (song == this.song) return
+
         replayTask?.cancel()
         this.song?.let { pc.entity.stopSound(it.sound) }
 
