@@ -11,13 +11,10 @@ import net.mcquest.engine.model.BlockbenchModel
 import net.mcquest.engine.model.Skin
 import net.mcquest.engine.music.Song
 import net.mcquest.engine.quest.Quest
-import net.mcquest.engine.resource.loadScript
 import net.mcquest.engine.resource.parseId
-import net.mcquest.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
+import net.mcquest.engine.script.parseScriptId
 import net.mcquest.engine.sound.deserializeSound
 import net.mcquest.engine.time.secondsToDuration
-import org.python.core.PyType
-import org.python.util.PythonInterpreter
 import java.time.Duration
 
 class CharacterBlueprint(
@@ -31,19 +28,19 @@ class CharacterBlueprint(
     val bossFight: BossFightBlueprint?,
     val behavior: BehaviorBlueprint?,
     val stances: Stances,
+    val stepSound: Sound?,
+    val speakSound: Sound?,
     val hurtSound: Sound?,
     val deathSound: Sound?,
-    val speakSound: Sound?,
     val interactions: List<Interaction>,
     val lootTable: LootTable?,
-    val script: PyType,
+    val scriptId: String?,
     val removalDelay: Duration
 )
 
 fun deserializeCharacterBlueprint(
     id: String,
     data: JsonNode,
-    interpreter: PythonInterpreter,
     musicById: Map<String, Song>,
     blockbenchModelsById: Map<String, BlockbenchModel>,
     blockbenchItemModelsById: Map<String, BlockbenchItemModel>,
@@ -66,13 +63,14 @@ fun deserializeCharacterBlueprint(
     data["behavior"]?.let { deserializeBehaviorBlueprint(it) },
     data["stance"]?.let { deserializeStances(it) }
         ?: Stances(Stance.FRIENDLY, emptyList(), emptyList(), emptyList()),
+    data["step_sound"]?.let(::deserializeSound),
+    data["speak_sound"]?.let(::deserializeSound),
     data["hurt_sound"]?.let(::deserializeSound),
     data["death_sound"]?.let(::deserializeSound),
-    data["speak_sound"]?.let(::deserializeSound),
     data["interactions"]?.map { deserializeInteraction(it, questsById) }
         ?: emptyList(),
     data["loot"]?.let(::deserializeLootTable),
-    loadScript(ScriptNonPlayerCharacter::class, data["script"]?.asText(), id, interpreter),
+    data["script"]?.let { parseScriptId(it.asText()) },
     data["removal_delay"]?.let { secondsToDuration(it.asDouble()) }
         ?: Duration.ofMillis(1000)
 )
