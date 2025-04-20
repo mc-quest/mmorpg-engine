@@ -56,11 +56,7 @@ class Instance(
 
     init {
         for (zone in zones) {
-            this.zones.put(
-                zone.outerBoundary.boundingBox.min,
-                zone.outerBoundary.boundingBox.max,
-                zone
-            )
+            this.zones.put(zone.outerBoundary.boundingBox, zone)
         }
 
         for (spawner in spawners) {
@@ -75,7 +71,7 @@ class Instance(
         zonesAt(position).maxByOrNull { it.type.priority }
 
     fun getNearbySpawners(position: Vector3, radius: Double) =
-        spawners.query(position, radius).filter {
+        spawners.query(BoundingBox3.from(position, Vector3.ONE * radius)).filter {
             Vector3.sqrDistance(position, it.position.toVector3()) <= radius.pow(2)
         }
 
@@ -89,23 +85,16 @@ class Instance(
     inline fun <reified T : GameObject> getNearbyObjects(
         position: Vector3,
         radius: Double
-    ): Collection<T> = objects.query(position, radius).filterIsInstance<T>().filter {
-        Vector3.sqrDistance(position, it.position.toVector3()) <= radius.pow(2)
-    }
+    ): Collection<T> = objects
+        .query(BoundingBox3.from(position, Vector3.ONE * radius))
+        .filterIsInstance<T>()
+        .filter { Vector3.sqrDistance(position, it.position.toVector3()) <= radius.pow(2) }
 
     fun getNearbyPlayers(position: Vector3, radius: Double) =
         getNearbyObjects<PlayerCharacter>(position, radius).map(PlayerCharacter::entity)
 
     inline fun <reified T : GameObject> getObjectsInBox(box: BoundingBox3) =
-        instanceContainer.getNearbyEntities(
-            box.center.toMinestom(),
-            maxOf(box.halfExtents.x, box.halfExtents.y, box.halfExtents.z)
-        ).mapNotNull { it.getTag(OBJECT_TAG) }.filterIsInstance<T>().filter {
-            overlapBox(
-                box,
-                it.boundingBox
-            )
-        }
+        objects.query(box).filterIsInstance<T>().filter { it.boundingBox.intersects(box) }
 
     fun playSound(position: Vector3, sound: Sound) = PacketUtils.sendGroupedPacket(
         getNearbyPlayers(position, soundRange(sound)),
