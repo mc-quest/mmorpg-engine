@@ -1,21 +1,25 @@
 package net.mcquest.engine.skill
 
 import net.mcquest.engine.character.PlayerCharacter
+import net.mcquest.engine.script.getScriptClass
 import net.mcquest.engine.script.SkillExecutor as ScriptSkillExecutor
+import org.python.core.Py
 
 class SkillExecutor(
-    private val pc: PlayerCharacter,
+    val user: PlayerCharacter,
     private val skill: Skill,
     private val startTimeMillis: Long
 ) {
-    private val handle = skill.script.__call__()
-        .__tojava__(ScriptSkillExecutor::class.java) as ScriptSkillExecutor
+    private val handle = getScriptClass(
+        skill.scriptId,
+        user.runtime.interpreter
+    ).__call__(Py.java2py(this)).__tojava__(ScriptSkillExecutor::class.java) as ScriptSkillExecutor
 
     var completed = false
         private set
 
     val lifetimeMillis
-        get() = pc.runtime.timeMillis - startTimeMillis
+        get() = user.runtime.timeMillis - startTimeMillis
 
     fun init() = handle.init()
 
