@@ -3,7 +3,6 @@ package net.mcquest.engine.quest
 import com.fasterxml.jackson.databind.JsonNode
 import net.mcquest.engine.character.CharacterBlueprint
 import net.mcquest.engine.character.parseCharacterBlueprintId
-import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.runtime.Runtime
 
 abstract class QuestObjective(val goal: Int, val markers: Collection<QuestObjectiveMarker>) {
@@ -18,12 +17,17 @@ class SlayCharacterObjective(
     val characterBlueprintId: String
 ) : QuestObjective(goal, markers) {
     override val description
-        get() = "${characterBlueprint?.name} slain"
+        get() = "Slay ${characterBlueprint?.name}"
     private var characterBlueprint: CharacterBlueprint? = null
 
     override fun start(runtime: Runtime, quest: Quest, objectiveIndex: Int) {
-        characterBlueprint = runtime.nonPlayerCharacterManager.getBlueprint(characterBlueprintId)
-        runtime.questManager.registerSlayObjective(quest, objectiveIndex, characterBlueprintId)
+        if (characterBlueprintId !in runtime.characterBlueprintsById) {
+            System.err.println("No such resource: characters:$characterBlueprintId")
+            return
+        }
+
+        characterBlueprint = runtime.characterBlueprintsById.getValue(characterBlueprintId)
+        runtime.questObjectiveManager.registerSlayObjective(quest, objectiveIndex, characterBlueprintId)
     }
 }
 
@@ -36,28 +40,25 @@ class CollectItemObjective(
         get() = itemBlueprintId // TODO
 
     override fun start(runtime: Runtime, quest: Quest, objectiveIndex: Int) {
-        runtime.questManager.registerItemCollectObjective(quest, objectiveIndex, itemBlueprintId)
+        runtime.questObjectiveManager.registerItemCollectObjective(quest, objectiveIndex, itemBlueprintId)
     }
 }
 
-fun deserializeQuestObjective(
-    data: JsonNode,
-    instancesById: Map<String, Instance>
-): QuestObjective = when (data["type"]?.asText()) {
+fun deserializeQuestObjective(data: JsonNode): QuestObjective = when (data["type"]?.asText()) {
     "slay_character" -> SlayCharacterObjective(
         data["goal"]?.asInt() ?: 1,
-        deserializeQuestObjectiveMarkers(data["markers"], instancesById),
+        deserializeQuestObjectiveMarkers(data["markers"]),
         parseCharacterBlueprintId(data["character"].asText())
     )
 
     "collect_item" -> CollectItemObjective(
         data["goal"]?.asInt() ?: 1,
-        deserializeQuestObjectiveMarkers(data["markers"], instancesById),
+        deserializeQuestObjectiveMarkers(data["markers"]),
         data["item"].asText()
     )
 
     else -> throw IllegalArgumentException("Unknown quest objective type: ${data["type"].asText()}")
 }
 
-private fun deserializeQuestObjectiveMarkers(data: JsonNode, instancesById: Map<String, Instance>) =
-    data.map { deserializeQuestObjectiveMarker(it, instancesById) }
+private fun deserializeQuestObjectiveMarkers(data: JsonNode) =
+    data.map(::deserializeQuestObjectiveMarker)

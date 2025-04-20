@@ -1,7 +1,6 @@
 package net.mcquest.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.resource.parseId
 import net.mcquest.engine.runtime.Runtime
 
@@ -19,12 +18,12 @@ class Quest(
     }
 }
 
-fun deserializeQuest(id: String, data: JsonNode, instancesById: Map<String, Instance>) = Quest(
+fun deserializeQuest(id: String, data: JsonNode) = Quest(
     id,
     data["name"].asText(),
     data["level"].asInt(),
     data["prerequisites"]?.map(JsonNode::asText) ?: emptyList(),
-    data["objectives"].map { deserializeQuestObjective(it, instancesById) }
+    data["objectives"].map(::deserializeQuestObjective)
 )
 
 fun parseQuestId(id: String) = parseId(id, "quests")

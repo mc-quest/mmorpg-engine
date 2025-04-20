@@ -1,28 +1,23 @@
 package net.mcquest.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.instance.parseInstanceId
-import net.mcquest.engine.math.*
+import net.mcquest.engine.math.Polygon
+import net.mcquest.engine.math.Vector2
+import net.mcquest.engine.math.deserializePolygon
+import net.mcquest.engine.math.deserializeVector2
 import java.awt.Graphics
 
-abstract class QuestObjectiveMarker(val instance: Instance) {
+abstract class QuestObjectiveMarker {
     abstract fun draw(graphics: Graphics)
 }
 
-class PointQuestObjectiveMarker(
-    instance: Instance,
-    private val point: Vector2
-) : QuestObjectiveMarker(instance) {
+class PointQuestObjectiveMarker(private val point: Vector2) : QuestObjectiveMarker() {
     override fun draw(graphics: Graphics) {
         graphics.fillOval(point.x.toInt(), point.y.toInt(), 10, 10)
     }
 }
 
-class PolygonQuestObjectiveMarker(
-    instance: Instance,
-    private val polygon: Polygon
-) : QuestObjectiveMarker(instance) {
+class PolygonQuestObjectiveMarker(private val polygon: Polygon) : QuestObjectiveMarker() {
     override fun draw(graphics: Graphics) {
         val xs = polygon.points.map { it.x.toInt() }.toIntArray()
         val ys = polygon.points.map { it.y.toInt() }.toIntArray()
@@ -30,16 +25,10 @@ class PolygonQuestObjectiveMarker(
     }
 }
 
-fun deserializeQuestObjectiveMarker(
-    data: JsonNode,
-    instancesById: Map<String, Instance>
-): QuestObjectiveMarker {
-    val instance = instancesById.getValue(parseInstanceId(data["instance"].asText()))
-    return when (data["type"].asText()) {
-        "point" -> PointQuestObjectiveMarker(instance, deserializeVector2(data["point"]))
+fun deserializeQuestObjectiveMarker(data: JsonNode) = when (data["type"].asText()) {
+    "point" -> PointQuestObjectiveMarker(deserializeVector2(data["point"]))
 
-        "polygon" -> PolygonQuestObjectiveMarker(instance, deserializePolygon(data["points"]))
+    "polygon" -> PolygonQuestObjectiveMarker(deserializePolygon(data["points"]))
 
-        else -> error("unknown marker type")
-    }
+    else -> error("unknown marker type")
 }
