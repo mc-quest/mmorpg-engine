@@ -1,54 +1,43 @@
 package net.mcquest.engine.runtime
 
-import net.mcquest.engine.character.NonPlayerCharacterManager
-import net.mcquest.engine.character.PlayerCharacterManager
-import net.mcquest.engine.collision.CollisionManager
-import net.mcquest.engine.gameobject.GameObjectManager
-import net.mcquest.engine.instance.InstanceManager
+import net.mcquest.engine.character.CharacterBlueprint
+import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.login.LoginManager
-import net.mcquest.engine.model.ModelManager
-import net.mcquest.engine.music.MusicManager
-import net.mcquest.engine.particle.ParticleManager
-import net.mcquest.engine.quest.QuestManager
+import net.mcquest.engine.music.Song
+import net.mcquest.engine.quest.Quest
+import net.mcquest.engine.quest.QuestObjectiveManager
 import net.mcquest.engine.resource.Resources
-import net.mcquest.engine.script.ScriptLibrary
-import net.mcquest.engine.sound.SoundManager
+import net.mcquest.engine.script.loadScriptLibrary
 import net.mcquest.engine.util.schedulerManager
-import net.mcquest.engine.zone.ZoneManager
+import net.mcquest.engine.zone.Zone
 import net.minestom.server.MinecraftServer
 import net.minestom.server.timer.TaskSchedule
+import org.python.util.PythonInterpreter
 
 class Runtime(resources: Resources) {
-    val server = resources.server
+    private val server = resources.server
+    val interpreter = PythonInterpreter()
     val config = resources.config
-    val instanceManager = InstanceManager(resources.instances)
-    val questManager = QuestManager(resources.quests)
-    val musicManager = MusicManager(resources.music)
-    val modelManager = ModelManager(resources.blockbenchModels, resources.blockbenchItemModels)
-    val zoneManager = ZoneManager(resources.zones)
-    val gameObjectManager = GameObjectManager(resources.spawners)
-    val nonPlayerCharacterManager = NonPlayerCharacterManager(resources.characterBlueprints)
-    val playerCharacterManager = PlayerCharacterManager()
-    val collisionManager = CollisionManager()
-    val loginManager = LoginManager()
-    val soundManager = SoundManager()
-    val particleManager = ParticleManager()
-    val interpreter = resources.interpreter
+    val instancesById = resources.instances.associateBy(Instance::id)
+    val questsById = resources.quests.associateBy(Quest::id)
+    val musicById = resources.music.associateBy(Song::id)
+    val characterBlueprintsById = resources.characterBlueprints.associateBy(CharacterBlueprint::id)
+    val zonesById = resources.zones.associateBy(Zone::id)
+    val questObjectiveManager = QuestObjectiveManager()
+    val loginManager = LoginManager(this)
 
     var timeMillis = 0L
         private set
 
     init {
-        ScriptLibrary(this).load(interpreter)
+        interpreter.systemState.path.add(resources.scriptDir.path)
     }
 
     fun start() {
-        instanceManager.start()
-        questManager.start(this)
-        modelManager.start()
+        loadScriptLibrary(interpreter, this)
+        instancesById.values.forEach(Instance::start)
+        questsById.values.forEach { it.start(this) }
         loginManager.start(this)
-        gameObjectManager.start(this)
-        playerCharacterManager.start(this)
 
         schedulerManager.buildTask(::tick)
             .repeat(TaskSchedule.tick(1))
@@ -58,8 +47,7 @@ class Runtime(resources: Resources) {
     }
 
     private fun tick() {
-        instanceManager.tick(this)
-        gameObjectManager.tick(this)
+        instancesById.values.forEach { it.tick(this) }
 
         timeMillis += MinecraftServer.TICK_MS
     }

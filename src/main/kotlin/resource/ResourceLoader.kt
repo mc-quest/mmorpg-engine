@@ -3,13 +3,11 @@ package net.mcquest.engine.resource
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.google.common.base.CaseFormat
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import net.mcquest.engine.character.CharacterBlueprint
 import net.mcquest.engine.character.deserializeCharacterBlueprint
 import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.instance.deserializeInstance
 import net.mcquest.engine.map.AreaMap
 import net.mcquest.engine.map.MapTexture
@@ -21,52 +19,48 @@ import net.mcquest.engine.music.deserializeSong
 import net.mcquest.engine.music.deserializeSongAsset
 import net.mcquest.engine.quest.Quest
 import net.mcquest.engine.quest.deserializeQuest
-import net.mcquest.engine.script.loadScriptClasses
 import net.mcquest.engine.skill.Skill
 import net.mcquest.engine.skill.deserializeSkill
 import net.mcquest.engine.sound.deserializeSoundAsset
 import net.mcquest.engine.zone.Zone
 import net.mcquest.engine.zone.deserializeZone
 import net.minestom.server.MinecraftServer
-import org.python.core.PyType
-import org.python.util.PythonInterpreter
 import team.unnamed.hephaestus.ModelDataCursor
 import team.unnamed.hephaestus.reader.blockbench.BBModelReader
 import java.io.File
-import kotlin.reflect.KClass
 
 class ResourceLoader(private val root: File) {
     private val objectMapper = ObjectMapper(YAMLFactory())
 
     fun loadAll(): Resources {
         val server = MinecraftServer.init()
-        val interpreter = PythonInterpreter()
-        loadScriptClasses(interpreter)
         val config = loadConfig()
-        val instancesById = loadInstances()
-        val questsById = loadQuests(instancesById)
+        val questsById = loadQuests()
         val musicById = loadMusic()
         val blockbenchModelsById = loadModels()
         val blockbenchItemModelsById = loadBlockbenchItemModels()
         val skinsById = loadSkins()
         val characterBlueprintsById = loadCharacterBlueprints(
-            interpreter,
             musicById,
             blockbenchModelsById,
             blockbenchItemModelsById,
             skinsById,
             questsById
         )
-        val skillsById = loadSkills(interpreter)
+        val skillsById = loadSkills()
         val playerClassesById = loadPlayerClasses(skillsById)
         val mapTexturesById = loadMapTextures()
         val mapsById = loadMaps(mapTexturesById)
-        val (zones, spawners) = loadZones(
-            instancesById,
+        val zonesAndSpawnersByZoneId = loadZones(
             musicById,
             mapsById,
             characterBlueprintsById
         )
+        val zonesById = zonesAndSpawnersByZoneId.entries.associate {
+            it.key to it.value.first
+        }
+        val instancesById = loadInstances(zonesAndSpawnersByZoneId)
+
         return Resources(
             server,
             config,
@@ -76,22 +70,20 @@ class ResourceLoader(private val root: File) {
             blockbenchModelsById.values,
             blockbenchItemModelsById.values,
             characterBlueprintsById.values,
-            zones.values,
-            spawners,
-            interpreter
+            zonesById.values,
+            root.resolve("scripts")
         )
     }
 
     fun loadConfig() = loadYamlResource("config.yaml", ::deserializeConfig)
 
-    fun loadInstances() = loadIdentifiedYamlResources("instances") { id, data ->
-        deserializeInstance(id, data, root)
+    fun loadInstances(
+        zonesAndSpawnersByZoneId: Map<String, Pair<Zone, Collection<GameObjectSpawner>>>
+    ) = loadIdentifiedYamlResources("instances") { id, data ->
+        deserializeInstance(id, data, root, zonesAndSpawnersByZoneId)
     }
 
-    fun loadQuests(instancesById: Map<String, Instance>) =
-        loadIdentifiedYamlResources("quests") { id, data ->
-            deserializeQuest(id, data, instancesById)
-        }
+    fun loadQuests() = loadIdentifiedYamlResources("quests", ::deserializeQuest)
 
     fun loadMusic() = loadIdentifiedResources("music", ::deserializeSong)
 
@@ -126,7 +118,6 @@ class ResourceLoader(private val root: File) {
     fun loadSkins() = loadIdentifiedYamlResources("skins", ::deserializeSkin)
 
     fun loadCharacterBlueprints(
-        interpreter: PythonInterpreter,
         musicById: Map<String, Song>,
         blockbenchModelsById: Map<String, BlockbenchModel>,
         blockbenchItemModelsById: Map<String, BlockbenchItemModel>,
@@ -136,7 +127,6 @@ class ResourceLoader(private val root: File) {
         deserializeCharacterBlueprint(
             id,
             data,
-            interpreter,
             musicById,
             blockbenchModelsById,
             blockbenchItemModelsById,
@@ -145,14 +135,7 @@ class ResourceLoader(private val root: File) {
         )
     }
 
-    fun loadSkills(interpreter: PythonInterpreter) =
-        loadIdentifiedYamlResources("skills") { id, data ->
-            deserializeSkill(
-                id,
-                data,
-                interpreter
-            )
-        }
+    fun loadSkills() = loadIdentifiedYamlResources("skills", ::deserializeSkill)
 
     fun loadPlayerClasses(skillsById: Map<String, Skill>) =
         loadIdentifiedYamlResources("classes") { id, data ->
@@ -170,27 +153,17 @@ class ResourceLoader(private val root: File) {
         }
 
     fun loadZones(
-        instancesById: Map<String, Instance>,
         musicById: Map<String, Song>,
         mapsById: Map<String, AreaMap>,
         characterBlueprintsById: Map<String, CharacterBlueprint>
-    ): Pair<Map<String, Zone>, Collection<GameObjectSpawner>> {
-        val zonesAndSpawnersById =
-            loadIdentifiedYamlResources("zones") { id, data ->
-                deserializeZone(
-                    id,
-                    data,
-                    instancesById,
-                    mapsById,
-                    musicById,
-                    characterBlueprintsById
-                )
-            }
-        val zonesById = zonesAndSpawnersById.entries.associate {
-            it.key to it.value.first
-        }
-        val spawners = zonesAndSpawnersById.values.flatMap { it.second }
-        return Pair(zonesById, spawners)
+    ) = loadIdentifiedYamlResources("zones") { id, data ->
+        deserializeZone(
+            id,
+            data,
+            mapsById,
+            musicById,
+            characterBlueprintsById
+        )
     }
 
     private fun <T> loadIdentifiedResources(
@@ -209,10 +182,22 @@ class ResourceLoader(private val root: File) {
     private fun <T> loadIdentifiedResources(
         dir: File,
         deserialize: (String, File) -> T
-    ) = dir.walk().filter(File::isFile).sorted().associate { file ->
-        val id = file.relativeTo(dir).path.substringBefore(".").replace(File.separatorChar, '.')
-        id to deserialize(id, file)
-    }
+    ): Map<String, T> = dir.walk()
+        .filter(File::isFile)
+        .sorted()
+        .mapNotNull { file ->
+            val id = file.relativeTo(dir).path.substringBefore(".").replace(File.separatorChar, '.')
+            val resource = try {
+                deserialize(id, file)
+            } catch (e: Exception) {
+                val prefix = dir.relativeTo(root).path
+                System.err.println("Error loading resource $prefix:$id")
+                e.printStackTrace()
+                null
+            }
+            resource?.let { id to it }
+        }
+        .toMap()
 
     private fun <T> loadYamlResource(
         path: String,
@@ -247,26 +232,5 @@ fun splitId(fullId: String): Pair<String, String> {
     val (prefix, id) = fullId.split(":")
     require(prefix.isNotBlank())
     require(id.isNotBlank())
-    return Pair(prefix, id)
-}
-
-fun <T : Any> loadScript(
-    superClass: KClass<T>,
-    script: String?,
-    id: String,
-    interpreter: PythonInterpreter
-): PyType {
-    val className = idToPythonClassName(id)
-    var wrappedScript = """
-        class $className(${superClass.simpleName}):
-          def __init__(self, handle):
-            NonPlayerCharacter.__init__(self, handle)
-    """.trimIndent()
-    script?.let { wrappedScript += "\n\n${it.prependIndent("  ")}" }
-    interpreter.exec(wrappedScript)
-    return interpreter.get(className) as PyType
-}
-
-fun idToPythonClassName(id: String): String = id.split('.').joinToString("") {
-    CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, it)
+    return prefix to id
 }

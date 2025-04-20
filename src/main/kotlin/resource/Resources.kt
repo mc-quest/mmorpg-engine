@@ -1,7 +1,6 @@
 package net.mcquest.engine.resource
 
 import net.mcquest.engine.character.CharacterBlueprint
-import net.mcquest.engine.gameobject.GameObjectSpawner
 import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.model.BlockbenchItemModel
 import net.mcquest.engine.model.BlockbenchModel
@@ -9,7 +8,7 @@ import net.mcquest.engine.music.Song
 import net.mcquest.engine.quest.Quest
 import net.mcquest.engine.zone.Zone
 import net.minestom.server.MinecraftServer
-import org.python.util.PythonInterpreter
+import java.io.File
 
 class Resources(
     val server: MinecraftServer,
@@ -21,6 +20,5 @@ class Resources(
     val blockbenchItemModels: Collection<BlockbenchItemModel>,
     val characterBlueprints: Collection<CharacterBlueprint>,
     val zones: Collection<Zone>,
-    val spawners: Collection<GameObjectSpawner>,
-    val interpreter: PythonInterpreter
+    val scriptDir: File
 )
