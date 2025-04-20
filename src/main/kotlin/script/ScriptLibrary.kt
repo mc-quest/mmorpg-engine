@@ -2,13 +2,12 @@
 
 package net.mcquest.engine.script
 
-import net.mcquest.engine.character.NonPlayerCharacterSpawner
-import net.mcquest.engine.character.parseCharacterBlueprintId
+import net.mcquest.engine.combat.DamageType
 import net.mcquest.engine.runtime.Runtime
+import net.mcquest.engine.skill.SkillStatus
 import net.mcquest.engine.time.millisToSeconds
 import net.mcquest.engine.time.secondsToDuration
 import net.mcquest.engine.util.schedulerManager
-import net.minestom.server.particle.Particle
 import org.python.core.*
 import org.python.util.PythonInterpreter
 import net.mcquest.engine.character.Character as EngineCharacter
@@ -18,92 +17,26 @@ import net.mcquest.engine.instance.Instance as EngineInstance
 import net.mcquest.engine.skill.SkillExecutor as EngineSkillExecutor
 import net.minestom.server.timer.Task as EngineTask
 
-class ScriptLibrary(val runtime: Runtime) {
-    fun load(interpreter: PythonInterpreter) {
-        interpreter["get_time"] = GetTime()
-        interpreter["spawn_character"] = SpawnCharacter()
-        interpreter["spawn_particle"] = SpawnParticle()
-        interpreter["play_sound"] = PlaySound()
-        interpreter["run_delayed"] = RunDelayed()
-    }
+const val moduleName = "mmorpg_engine"
 
-    private inner class GetTime : PyObject() {
-        override fun __call__(): PyObject = Py.java2py(millisToSeconds(runtime.timeMillis))
-    }
-
-    private inner class SpawnCharacter : PyObject() {
-        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
-            val instance = args[0].__tojava__(Instance::class.java) as Instance
-            val position = args[1].__tojava__(Position::class.java) as Position
-            val blueprintId = parseCharacterBlueprintId(args[2].asString())
-            val blueprint = runtime.nonPlayerCharacterManager.getBlueprint(blueprintId)
-            val character = runtime.gameObjectManager.spawn(
-                NonPlayerCharacterSpawner(
-                    instance.handle,
-                    ScriptToEngine.position(position),
-                    blueprint
-                ),
-                runtime
-            ) as EngineNonPlayerCharacter
-            return Py.java2py(character.handle)
-        }
-    }
-
-    private inner class PlaySound : PyObject() {
-        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
-            val instance = args[0].__tojava__(Instance::class.java) as Instance
-            val position = args[1].__tojava__(Vector::class.java) as Vector
-            val sound = args[2].__tojava__(Sound::class.java) as Sound
-            runtime.soundManager.playSound(
-                instance.handle,
-                ScriptToEngine.vector3(position),
-                ScriptToEngine.sound(sound)
-            )
-            return Py.None
-        }
-    }
-
-    private inner class SpawnParticle : PyObject() {
-        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
-            val instance = args[0].__tojava__(Instance::class.java) as Instance
-            val position = args[1].__tojava__(Vector::class.java) as Vector
-            val particle = args[2].asString()
-            Particle.fromNamespaceId(particle)?.let {
-                runtime.particleManager.spawnParticle(
-                    it,
-                    instance.handle,
-                    ScriptToEngine.vector3(position)
-                )
-            }
-            return Py.None
-        }
-    }
-
-    private inner class RunDelayed : PyObject() {
-        override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
-            val task = args[0]
-            val delay = args[1].asDouble()
-            return Py.java2py(
-                Task(
-                    schedulerManager.buildTask(task::__call__).delay(secondsToDuration(delay)).schedule()
-                )
-            )
-        }
-    }
+fun loadScriptLibrary(interpreter: PythonInterpreter, runtime: Runtime) {
+    val classes = mapOf(
+        "Point" to Point::class,
+        "Vector" to Vector::class,
+        "Position" to Position::class,
+        "Instance" to Instance::class,
+        "NonPlayerCharacter" to NonPlayerCharacter::class,
+        "SkillExecutor" to SkillExecutor::class,
+        "SkillStatus" to SkillStatus::class,
+        "DamageType" to DamageType::class
+    ).mapValues { Py.java2py(it.value.java) }
+    val functions = mapOf(
+        "get_time" to GetTime(runtime),
+        "run_delayed" to RunDelayed(runtime)
+    )
+    val module = PyModule(moduleName, PyStringMap(classes + functions))
+    interpreter.systemState.modules.__setitem__(moduleName, module)
 }
-
-class Instance(val handle: EngineInstance) {
-    val id: String
-        get() = handle.id
-
-    fun spawn_character(position: Position, character: String) = Unit
-}
-
-class Task(private val handle: EngineTask) {
-    fun cancel() = handle.cancel()
-}
-
-data class Sound(val name: String, val volume: Float, val pitch: Float)
 
 interface Point {
     val x: Double
@@ -146,6 +79,24 @@ data class Position(
     fun __sub__(v: Vector) = Position(x - v.x, y - v.y, z - v.z, yaw, pitch)
 }
 
+class Instance(val handle: EngineInstance) {
+    val id: String
+        get() = handle.id
+
+    fun play_sound(position: Point, sound: Sound) = handle.playSound(
+        ScriptToEngine.vector3(position),
+        ScriptToEngine.sound(sound)
+    )
+
+    fun spawn_character(position: Point, character: String) = Unit
+}
+
+class Task(private val handle: EngineTask) {
+    fun cancel() = handle.cancel()
+}
+
+data class Sound(val name: String, val volume: Float, val pitch: Float)
+
 open class Character(
     private val handle: EngineCharacter
 ) {
@@ -167,8 +118,6 @@ class PlayerCharacter(
 open class NonPlayerCharacter(
     private val handle: EngineNonPlayerCharacter
 ) : Character(handle) {
-    fun play_animation(animation: String) = handle.playAnimation(animation)
-
     open fun tick() = Unit
 
     open fun on_spawn() = Unit
@@ -177,6 +126,9 @@ open class NonPlayerCharacter(
 }
 
 open class SkillExecutor(private val handle: EngineSkillExecutor) {
+    private val user
+        get() = handle.user.handle
+
     private val lifetime
         get() = millisToSeconds(handle.lifetimeMillis)
 
@@ -187,10 +139,18 @@ open class SkillExecutor(private val handle: EngineSkillExecutor) {
     open fun tick() = Unit
 }
 
-fun loadScriptClasses(interpreter: PythonInterpreter) {
-    interpreter["Vector"] = Vector::class.java
-    interpreter["Position"] = Position::class.java
-    interpreter["Sound"] = Sound::class.java
-    interpreter["NonPlayerCharacter"] = NonPlayerCharacter::class.java
-    interpreter["SkillExecutor"] = SkillExecutor::class.java
+class GetTime(val runtime: Runtime) : PyObject() {
+    override fun __call__(): PyObject = Py.java2py(millisToSeconds(runtime.timeMillis))
+}
+
+class RunDelayed(val runtime: Runtime) : PyObject() {
+    override fun __call__(args: Array<PyObject>, keywords: Array<String>): PyObject {
+        val delay = args[0].asDouble()
+        val function = args[1]
+        return Py.java2py(
+            Task(
+                schedulerManager.buildTask(function::__call__).delay(secondsToDuration(delay)).schedule()
+            )
+        )
+    }
 }
