@@ -3,11 +3,15 @@ package net.mcquest.engine.character
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.mcquest.engine.instance.Instance
+import net.mcquest.engine.math.Position
 import net.mcquest.engine.quest.Quest
 import net.mcquest.engine.quest.parseQuestId
 
 abstract class Interaction {
     abstract fun isAvailable(pc: PlayerCharacter): Boolean
+
+    abstract fun start(instance: Instance, position: Position)
 
     abstract fun advance(
         npc: NonPlayerCharacter,
@@ -23,6 +27,10 @@ class StartQuestInteraction(
     override fun isAvailable(pc: PlayerCharacter) =
         pc.questTracker.isReadyToStart(quest)
 
+    override fun start(instance: Instance, position: Position) {
+        instance.questStarts.put(position.toVector2(), quest)
+    }
+
     override fun advance(
         npc: NonPlayerCharacter,
         pc: PlayerCharacter,
@@ -30,10 +38,10 @@ class StartQuestInteraction(
     ): Boolean {
         if (index < dialogue.size) {
             npc.speak(dialogue[index], pc)
-            return false
+            return true
         } else {
             pc.questTracker.startQuest(quest)
-            return true
+            return false
         }
     }
 }
@@ -45,6 +53,10 @@ class TurnInQuestInteraction(
     override fun isAvailable(pc: PlayerCharacter) =
         pc.questTracker.isReadyToTurnIn(quest)
 
+    override fun start(instance: Instance, position: Position) {
+        instance.questTurnIns.put(position.toVector2(), quest)
+    }
+
     override fun advance(
         npc: NonPlayerCharacter,
         pc: PlayerCharacter,
@@ -52,10 +64,10 @@ class TurnInQuestInteraction(
     ): Boolean {
         if (index < dialogue.size) {
             npc.speak(dialogue[index], pc)
-            return false
+            return true
         } else {
             pc.questTracker.completeQuest(quest)
-            return true
+            return false
         }
     }
 }
