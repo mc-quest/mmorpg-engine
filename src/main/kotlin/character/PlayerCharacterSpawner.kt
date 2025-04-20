@@ -8,11 +8,10 @@ import net.mcquest.engine.runtime.Runtime
 import net.minestom.server.entity.Player
 
 class PlayerCharacterSpawner(
-    instance: Instance,
     position: Position,
-    val player: Player,
+    val entity: Player,
     val data: PlayerCharacterData
-) : GameObjectSpawner(instance, position) {
-    override fun spawn(runtime: Runtime): PlayerCharacter =
-        PlayerCharacter(runtime, this, player, data)
+) : GameObjectSpawner(position) {
+    override fun spawn(instance: Instance, runtime: Runtime) =
+        PlayerCharacter(this, instance, runtime, entity, data)
 }
