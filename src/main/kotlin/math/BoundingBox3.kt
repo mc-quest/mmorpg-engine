@@ -15,4 +15,7 @@ data class BoundingBox3(val min: Vector3, val max: Vector3) {
     val halfExtents = (max - min) / 2.0
 
     fun contains(point: Vector3) = coordinateWiseLeq(min, point) && coordinateWiseLeq(point, max)
+
+    fun intersects(boundingBox3: BoundingBox3) =
+        coordinateWiseLeq(min, boundingBox3.max) && coordinateWiseLeq(boundingBox3.min, max)
 }
