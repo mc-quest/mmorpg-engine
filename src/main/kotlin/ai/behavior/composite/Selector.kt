@@ -12,14 +12,27 @@ class Selector(children: List<Behavior>) : Composite(children) {
     }
 
     override fun update(character: NonPlayerCharacter): BehaviorStatus {
+        val prevChild = currentChild
+        currentChild = 0
+
+        var status = BehaviorStatus.FAILURE
+
         while (currentChild < children.size) {
-            val status = children[currentChild].tick(character)
-            if (status != BehaviorStatus.FAILURE) {
-                return status
+            val childStatus = children[currentChild].tick(character)
+
+            if (childStatus != BehaviorStatus.FAILURE) {
+                status = childStatus
+                break
             }
+
             currentChild++
         }
-        return BehaviorStatus.FAILURE
+
+        if (prevChild != children.size && currentChild != prevChild) {
+            children[prevChild].abort(character)
+        }
+
+        return status
     }
 }
 
@@ -29,6 +42,5 @@ class SelectorBlueprint(
     override fun create() = Selector(children.map(BehaviorBlueprint::create))
 }
 
-fun deserializeSelectorBlueprint(data: JsonNode) = SelectorBlueprint(
-    data["children"].map(::deserializeBehaviorBlueprint)
-)
+fun deserializeSelectorBlueprint(data: JsonNode) =
+    SelectorBlueprint(data["children"].map(::deserializeBehaviorBlueprint))

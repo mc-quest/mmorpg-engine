@@ -64,7 +64,6 @@ fun deserializeBehaviorBlueprint(data: JsonNode): BehaviorBlueprint =
     when (data["type"].asText()) {
         "sequence" -> deserializeSequenceBlueprint(data)
         "selector" -> deserializeSelectorBlueprint(data)
-        "active_selector" -> deserializeActiveSelectorBlueprint(data)
         "simple_parallel" -> deserializeSimpleParallelBlueprint(data)
         "random_selector" -> deserializeRandomSelectorBlueprint(data)
         "inverter" -> deserializeInverterBlueprint(data)
