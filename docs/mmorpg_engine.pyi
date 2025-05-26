@@ -1,6 +1,7 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, ClassVar, Dict, TypeVar, Union
+from typing import Callable, ClassVar, TypeVar, Union
 
 class Point:
     """Represents a 3D point interface with x, y, and z coordinates."""
@@ -23,31 +24,31 @@ class Vector(Point):
     y: float
     z: float
 
-    ZERO: ClassVar['Vector']
+    ZERO: ClassVar[Vector]
     """Shorthand for Vector(0, 0, 0)."""
 
-    ONE: ClassVar['Vector']
+    ONE: ClassVar[Vector]
     """Shorthand for Vector(1, 1, 1)."""
 
-    LEFT: ClassVar['Vector']
+    LEFT: ClassVar[Vector]
     """Shorthand for Vector(1, 0, 0)."""
 
-    RIGHT: ClassVar['Vector']
+    RIGHT: ClassVar[Vector]
     """Shorthand for Vector(-1, 0, 0)."""
 
-    UP: ClassVar['Vector']
+    UP: ClassVar[Vector]
     """Shorthand for Vector(0, 1, 0)."""
 
-    DOWN: ClassVar['Vector']
+    DOWN: ClassVar[Vector]
     """Shorthand for Vector(0, -1, 0)."""
 
-    FORWARD: ClassVar['Vector']
+    FORWARD: ClassVar[Vector]
     """Shorthand for Vector(0, 0, 1)."""
 
-    BACK: ClassVar['Vector']
+    BACK: ClassVar[Vector]
     """Shorthand for Vector(0, 0, -1)."""
 
-    def __add__(self, v: 'Vector') -> 'Vector':
+    def __add__(self, v: Vector) -> Vector:
         """Adds two vectors.
 
         Args:
@@ -58,7 +59,7 @@ class Vector(Point):
         """
         ...
 
-    def __sub__(self, v: 'Vector') -> 'Vector':
+    def __sub__(self, v: Vector) -> Vector:
         """Subtracts a vector from this vector.
 
         Args:
@@ -69,7 +70,7 @@ class Vector(Point):
         """
         ...
 
-    def __mul__(self, s: float) -> 'Vector':
+    def __mul__(self, s: float) -> Vector:
         """Multiplies the vector by a scalar.
 
         Args:
@@ -91,7 +92,12 @@ class Position(Point):
     yaw: float = 0
     pitch: float = 0
 
-    def __add__(self, v: Vector) -> 'Position':
+    @property
+    def direction(self) -> Vector:
+        """The direction vector based on yaw and pitch."""
+        ...
+
+    def __add__(self, v: Vector) -> Position:
         """Adds a vector to this position.
 
         Args:
@@ -102,7 +108,7 @@ class Position(Point):
         """
         ...
 
-    def __sub__(self, v: Vector) -> 'Position':
+    def __sub__(self, v: Vector) -> Position:
         """Subtracts a vector from this position.
 
         Args:
@@ -124,14 +130,14 @@ class DamageType(Enum):
     HOLY = 7
 
 
-class Damage(Dict[DamageType, float]):
+class Damage(dict[DamageType, float]):
     """Represents a blow of damage with damage types and amounts."""
 
-    def __init__(self, damage: Union[float, Dict[DamageType, float]]) -> None:
+    def __init__(self, damage: Union[float, dict[DamageType, float]]) -> None:
         """Initializes the damage object.
 
         Args:
-            damage (Union[float, Dict[DamageType, float]]): The damage types and amounts.
+            damage (Union[float, dict[DamageType, float]]): The damage types and amounts.
 
         Examples:
             >>> Damage(10)
@@ -149,7 +155,7 @@ class Sound:
 
 
 class Instance:
-    def spawn_character(self, position: Position, character: str) -> 'NonPlayerCharacter':
+    def spawn_character(self, position: Position, character: str) -> NonPlayerCharacter:
         """Spawns a character at the given position.
 
         Args:
@@ -172,7 +178,25 @@ class Instance:
             sound (Sound): The sound to play.
 
         Examples:
-            >>> instance.play_sound(position, Sound('minecraft:entity.zombie.attack_iron_door'))
+            >>> instance.play_sound(position, Sound('sounds:portcullis_close'))
+        """
+        ...
+
+    def get_characters_in_box(
+        self,
+        position: Position,
+        half_extents: Vector,
+        filter: Callable[[Character], bool] = lambda _: True
+    ) -> list[Character]:
+        """Returns a list of characters in the box defined by position and half extents.
+
+        Args:
+            position (Position): The center position of the box.
+            half_extents (Vector): The half extents of the box.
+            filter (Callable[[Character], bool], optional): A filter function to apply to each character. Defaults to a function that returns True for all characters.
+
+        Returns:
+            list[Character]: List of characters in the box.
         """
         ...
 
@@ -182,7 +206,7 @@ class Instance:
         model: str,
         hitbox_extents: Vector,
         max_distance: float
-    ) -> 'Projectile':
+    ) -> Projectile:
         """Spawns a projectile at the given position.
 
         Args:
@@ -229,11 +253,11 @@ class GameObject:
 
 class Character(GameObject):
     @property
-    def on_take_damage(self) -> 'Signal'['TakeDamageEvent']:
+    def on_take_damage(self) -> Signal[TakeDamageEvent]:
         """Signal emitted when the character takes damage."""
         ...
 
-    def damage(self, damage: Damage, source: 'Character') -> None:
+    def damage(self, damage: Damage, source: Character) -> None:
         """Deals damage to the character.
 
         Args:
@@ -285,7 +309,7 @@ class NonPlayerCharacter(Character):
 
 class Projectile(GameObject):
     @property
-    def on_hit(self) -> 'Signal'['ProjectileHitEvent']:
+    def on_hit(self) -> Signal[ProjectileHitEvent]:
         """Signal emitted when the projectile hits something."""
         ...
 
@@ -322,6 +346,7 @@ class ProjectileHitEvent(Event):
     @property
     def projectile(self) -> Projectile:
         """The projectile that hit something."""
+        ...
 
     @property
     def hit(self) -> GameObject:
@@ -337,7 +362,8 @@ class Signal[E]:
         """Adds a receiver to the signal.
 
         Args:
-            receiver (callable): The receiver function.
+            receiver (Callable[[E], None]): The receiver function that will be
+            called when the signal is emitted.
 
         Examples:
             >>> handle_goblin_death = lambda event: print('Goblin died!')
