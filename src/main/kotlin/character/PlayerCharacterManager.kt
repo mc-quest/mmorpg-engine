@@ -1,7 +1,5 @@
 package net.mcquest.engine.character
 
-import net.mcquest.engine.combat.Damage
-import net.mcquest.engine.combat.DamageType
 import net.mcquest.engine.math.Position
 import net.mcquest.engine.math.Vector3
 import net.mcquest.engine.persistence.PlayerCharacterData
@@ -39,9 +37,9 @@ class PlayerCharacterManager {
                     "oakshire"
                 )
                 event.player.respawnPoint = data.position.toMinestom()
-                val instance = runtime.instanceManager.getInstance(data.instanceId)
-                val spawner = PlayerCharacterSpawner(instance, data.position, event.player, data)
-                val pc = runtime.gameObjectManager.spawn(spawner, runtime) as PlayerCharacter
+                val instance = runtime.instancesById.getValue(data.instanceId)
+                val spawner = PlayerCharacterSpawner(data.position, event.player, data)
+                val pc = instance.spawn(spawner, runtime) as PlayerCharacter
                 pcsByPlayer[event.player] = pc
                 event.player.inventory.setItemStack(8, ItemStack.builder(Material.IRON_SWORD).build())
             }.delay(TaskSchedule.seconds(3)).schedule()
@@ -54,18 +52,18 @@ class PlayerCharacterManager {
         }
 
         globalEventHandler.addListener(PlayerHandAnimationEvent::class.java) { event ->
-            val pc = getPlayerCharacter(event.player)
-            runtime.collisionManager.raycastAll(
-                pc.instance,
-                pc.eyePosition,
-                pc.position.direction,
-                6.0
-            ) { it is CharacterHitbox }.map {
-                it.collider as CharacterHitbox
-            }.map { it.character }.filter { it != pc }.forEach {
-                it.damage(Damage(DamageType.PHYSICAL, 25.0), pc)
-                it.applyImpulse(pc.position.direction * 100.0)
-            }
+//            val pc = getPlayerCharacter(event.player)
+//            pc.instance.raycastAll(
+//                pc.instance,
+//                pc.eyePosition,
+//                pc.position.direction,
+//                6.0
+//            ) { it is CharacterHitbox }.map {
+//                it.collider as CharacterHitbox
+//            }.map { it.character }.filter { it != pc }.forEach {
+//                it.damage(Damage(DamageType.PHYSICAL, 25.0), pc)
+//                it.applyImpulse(pc.position.direction * 100.0)
+//            }
         }
 
         globalEventHandler.addListener(PlayerStartSneakingEvent::class.java) {
@@ -89,20 +87,20 @@ class PlayerCharacterManager {
     }
 
     private fun handlePlayerInteract(event: PlayerUseItemEvent, runtime: Runtime) {
-        val pc = pcsByPlayer[event.player] ?: return
-        if (event.hand != Player.Hand.MAIN) return
-        val hitbox = runtime.collisionManager.raycast(
-            pc.instance,
-            pc.eyePosition,
-            pc.position.direction,
-            INTERACT_DISTANCE,
-        ) { collider ->
-            collider != pc.hitbox &&
-                    collider is CharacterHitbox &&
-                    collider.character.isAlive &&
-                    !collider.character.isInvisible
-        }?.collider as? CharacterHitbox
-        hitbox?.character?.interact(pc)
+//        val pc = pcsByPlayer[event.player] ?: return
+//        if (event.hand != Player.Hand.MAIN) return
+//        val hitbox = runtime.collisionManager.raycast(
+//            pc.instance,
+//            pc.eyePosition,
+//            pc.position.direction,
+//            INTERACT_DISTANCE,
+//        ) { collider ->
+//            collider != pc.hitbox &&
+//                    collider is CharacterHitbox &&
+//                    collider.character.isAlive &&
+//                    !collider.character.isInvisible
+//        }?.collider as? CharacterHitbox
+//        hitbox?.character?.interact(pc)
     }
 
     private val pcStartSneakTimes = mutableMapOf<PlayerCharacter, Long>()

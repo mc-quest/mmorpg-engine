@@ -1,6 +1,7 @@
 package net.mcquest.engine.runtime
 
 import net.mcquest.engine.character.CharacterBlueprint
+import net.mcquest.engine.character.CharacterEvents
 import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.login.LoginManager
 import net.mcquest.engine.music.Song
@@ -25,6 +26,7 @@ class Runtime(resources: Resources) {
     val zonesById = resources.zones.associateBy(Zone::id)
     val questObjectiveManager = QuestObjectiveManager()
     val loginManager = LoginManager(this)
+    val characterEvents = CharacterEvents(this)
 
     var timeMillis = 0L
         private set
@@ -37,7 +39,8 @@ class Runtime(resources: Resources) {
         loadScriptLibrary(interpreter, this)
         instancesById.values.forEach(Instance::start)
         questsById.values.forEach { it.start(this) }
-        loginManager.start(this)
+        loginManager.start()
+        characterEvents.start()
 
         schedulerManager.buildTask(::tick)
             .repeat(TaskSchedule.tick(1))

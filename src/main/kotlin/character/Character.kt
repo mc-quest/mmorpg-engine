@@ -3,49 +3,33 @@ package net.mcquest.engine.character
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.mcquest.engine.collision.Collider
 import net.mcquest.engine.combat.Damage
 import net.mcquest.engine.gameobject.GameObject
 import net.mcquest.engine.gameobject.GameObjectSpawner
 import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Position
 import net.mcquest.engine.math.Vector3
 import net.mcquest.engine.runtime.Runtime
 import net.mcquest.engine.util.fromMinestom
 import net.mcquest.engine.util.toMinestom
 import net.minestom.server.entity.LivingEntity
 import team.unnamed.hephaestus.minestom.ModelEntity
-import java.lang.Math.toRadians
 import kotlin.math.ceil
 import net.mcquest.engine.script.Character as ScriptCharacter
 
 abstract class Character(
-    runtime: Runtime,
     spawner: GameObjectSpawner,
+    instance: Instance,
+    runtime: Runtime,
     val summoner: Character? = null
-) : GameObject(runtime, spawner) {
+) : GameObject(spawner, instance, runtime) {
+    abstract override val entity: LivingEntity
     abstract val name: String
     abstract val level: Int
     abstract val maxHealth: Double
     abstract var health: Double
     abstract val mass: Double
-    abstract val entity: LivingEntity
-    abstract val hitbox: CharacterHitbox
     abstract val handle: ScriptCharacter
-    val nameplate = CharacterNameplate()
-    var entityTeleporting = false
-        protected set
-
-    override var position
-        get() = super.position
-        set(value) {
-            super.position = value
-            hitbox.position = value.toVector3()
-            nameplate.updatePosition(this)
-        }
-
-    val previousPosition
-        get() = Position.fromMinestom(entity.previousPosition)
+    val nameplate = CharacterNameplate(this)
 
     val isAlive
         get() = health > 0
@@ -77,40 +61,24 @@ abstract class Character(
     val rootSummoner: Character?
         get() = summoner?.let { it.rootSummoner ?: it }
 
-    override fun setInstance(instance: Instance, position: Position) {
-        super.setInstance(instance, position)
-        entityTeleporting = true
-        entity.setInstance(
-            instance.instanceContainer,
-            position.toMinestom()
-        ).thenRun {
-            entity.teleport(position.toMinestom())
-            entityTeleporting = false
-        }
-        hitbox.setInstance(instance, position.toVector3())
-        nameplate.updateInstance(this)
-    }
-
     override fun spawn() {
-        nameplate.spawn(this)
-        runtime.collisionManager.add(hitbox)
+        super.spawn()
+        nameplate.spawn()
     }
 
     override fun despawn() {
-        entity.remove()
+        super.despawn()
         nameplate.despawn()
-        hitbox.remove()
     }
 
     override fun tick() {
-        if (!entityTeleporting)
-            position = Position.fromMinestom(entity.position)
-        nameplate.tick(this)
+        super.tick()
+        nameplate.tick()
     }
 
+    // TODO:  should this go in GameObject?
     fun lookAt(position: Vector3) {
         entity.lookAt(position.toMinestom())
-        this.position = Position.fromMinestom(entity.position)
     }
 
     fun lookAt(character: Character) = lookAt(character.eyePosition)
@@ -127,12 +95,8 @@ abstract class Character(
     }
 
     fun emitSound(sound: Sound, localOffset: Vector3 = Vector3.ZERO) {
-        val globalOffset = localOffset.rotateAroundY(toRadians(-position.yaw))
-        runtime.soundManager.playSound(
-            instance,
-            (position.toVector3() + globalOffset),
-            sound
-        )
+        val globalOffset = position.localToGlobalDirection(localOffset)
+        instance.playSound(position.toVector3() + globalOffset, sound)
     }
 
     open fun speak(dialogue: Component, to: PlayerCharacter) = to.sendMessage(
@@ -147,8 +111,9 @@ abstract class Character(
 
     open fun damage(damage: Damage, source: Character) {
         if (!isAlive) return
-        health = maxOf(0.0, health - damage.amount)
-        nameplate.updateHealthBar(this)
+        // TODO: Factor in resistances
+        health = maxOf(0.0, health - damage.damage.values.sum())
+        nameplate.updateHealthBar()
         if (health == 0.0) die()
     }
 
@@ -179,9 +144,3 @@ abstract class Character(
             .append(Component.text("]", NamedTextColor.GRAY))
     }
 }
-
-class CharacterHitbox(val character: Character) : Collider(
-    character.instance,
-    character.position.toVector3(),
-    Vector3.fromMinestom(character.entity.boundingBox)
-)

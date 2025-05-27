@@ -6,11 +6,16 @@ import net.mcquest.engine.gameobject.GameObjectSpawner
 import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.math.Position
 import net.mcquest.engine.runtime.Runtime
+import net.minestom.server.entity.EntityType
+import team.unnamed.hephaestus.minestom.ModelEntity
 
 class LootChest(
-    runtime: Runtime,
-    spawner: LootChestSpawner
-) : GameObject(runtime, spawner) {
+    spawner: LootChestSpawner,
+    instance: Instance,
+    runtime: Runtime
+) : GameObject(spawner, instance, runtime) {
+    override val entity = ModelEntity(EntityType.ARMOR_STAND, error(""), 1.0F)
+
     override fun spawn() {
         TODO()
     }
@@ -26,9 +31,9 @@ class LootChest(
 }
 
 class LootChestSpawner(
-    instance: Instance,
     position: Position,
     val lootTable: LootTable
-) : GameObjectSpawner(instance, position) {
-    override fun spawn(runtime: Runtime) = LootChest(runtime, this)
+) : GameObjectSpawner(position) {
+    override fun spawn(instance: Instance, runtime: Runtime) =
+        LootChest(this, instance, runtime)
 }

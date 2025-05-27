@@ -2,7 +2,10 @@ package net.mcquest.engine.character
 
 import net.kyori.adventure.text.Component
 import net.mcquest.engine.ai.navigation.Navigator
+import net.mcquest.engine.instance.Instance
 import net.mcquest.engine.runtime.Runtime
+import net.mcquest.engine.script.SkillExecutor
+import net.mcquest.engine.script.getScriptClass
 import net.mcquest.engine.util.schedulerManager
 import net.mcquest.engine.util.toMinestom
 import org.python.core.Py
@@ -11,11 +14,13 @@ import team.unnamed.hephaestus.minestom.ModelEntity
 import net.mcquest.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
 
 class NonPlayerCharacter(
-    runtime: Runtime,
-    spawner: NonPlayerCharacterSpawner
-) : Character(runtime, spawner) {
+    spawner: NonPlayerCharacterSpawner,
+    instance: Instance,
+    runtime: Runtime
+) : Character(spawner, instance, runtime, spawner.summoner) {
     val blueprint
         get() = (spawner as NonPlayerCharacterSpawner).blueprint
+    override val entity = blueprint.model.createEntity()
     override val name
         get() = blueprint.name
     override val level
@@ -25,24 +30,17 @@ class NonPlayerCharacter(
     override var health = maxHealth
     override val mass
         get() = blueprint.mass
-    override val entity = blueprint.model.createEntity()
     val navigator = Navigator(this)
     val behavior = blueprint.behavior?.create()
-    override val hitbox = CharacterHitbox(this)
     var target: Character? = null
-    private val bossFight = blueprint.bossFight?.create()
+    private val bossFight = blueprint.bossFight?.create(this)
     private val interactionIndices = mutableMapOf<Pair<PlayerCharacter, Interaction>, Int>()
     private val attackers = mutableSetOf<PlayerCharacter>()
-    override val handle = blueprint.script.__call__(Py.java2py(this))
-        .__tojava__(ScriptNonPlayerCharacter::class.java) as ScriptNonPlayerCharacter
+    override val handle = ScriptNonPlayerCharacter(this)
 
     override fun spawn() {
         super.spawn()
-        entity.setInstance(instance.instanceContainer, position.toMinestom()).join()
-        if (entity is ModelEntity) {
-            MinestomModelEngine.minestom().tracker().startGlobalTracking(entity)
-        }
-        bossFight?.init(this)
+        bossFight?.init()
         handle.on_spawn()
     }
 
@@ -54,8 +52,11 @@ class NonPlayerCharacter(
 
     override fun tick() {
         super.tick()
-        if (isAlive and interactionIndices.isEmpty()) behavior?.tick(this)
-        bossFight?.tick(this)
+        if (isAlive and interactionIndices.isEmpty()) {
+            navigator.tick()
+            behavior?.tick(this)
+        }
+        bossFight?.tick()
         handle.tick()
     }
 
@@ -73,11 +74,11 @@ class NonPlayerCharacter(
         val index = interactionIndices.getOrDefault(pc to interaction, 0)
         lookAt(pc)
         if (interaction.advance(this, pc, index)) {
-            interactionIndices.remove(pc to interaction)
-            pc.enableMovement()
-        } else {
             interactionIndices[pc to interaction] = index + 1
             pc.disableMovement()
+        } else {
+            interactionIndices.remove(pc to interaction)
+            pc.enableMovement()
         }
     }
 
@@ -99,7 +100,7 @@ class NonPlayerCharacter(
             .delay(blueprint.removalDelay)
             .schedule()
         attackers.forEach {
-            runtime.questManager.handleCharacterDeath(it, this)
+            runtime.questObjectiveManager.handleCharacterDeath(it, this)
         }
     }
 

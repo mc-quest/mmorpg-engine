@@ -23,6 +23,8 @@ class FollowTarget(
             target.isInvisible ||
             target.instance != character.instance
         ) {
+            // TODO: consider updating target every tick in NonPlayerCharacter
+            //  based on whether target is dead, invisible, or in another instance
             character.navigator.reset()
             return BehaviorStatus.FAILURE
         }
@@ -62,7 +64,7 @@ class FollowTargetBlueprint(
     override fun create() = FollowTarget(acceptanceRadius, maxDistance, speed)
 }
 
-fun deserializeFollowTarget(data: JsonNode) = FollowTargetBlueprint(
+fun deserializeFollowTargetBlueprint(data: JsonNode) = FollowTargetBlueprint(
     data["acceptance_radius"].asDouble(),
     data["max_distance"].asDouble(),
     data["speed"].asDouble()
