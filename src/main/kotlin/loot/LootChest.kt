@@ -1,11 +1,11 @@
-package net.mcquest.engine.loot
+package com.shadowforgedmmo.engine.loot
 
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.gameobject.GameObject
-import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.gameobject.GameObject
+import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.runtime.Runtime
 import net.minestom.server.entity.EntityType
 import team.unnamed.hephaestus.minestom.ModelEntity
 

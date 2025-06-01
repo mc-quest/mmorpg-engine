@@ -1,4 +1,4 @@
-package net.mcquest.engine.combat
+package com.shadowforgedmmo.engine.combat
 
 import com.fasterxml.jackson.databind.JsonNode
 

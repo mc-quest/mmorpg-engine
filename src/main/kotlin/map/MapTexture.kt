@@ -1,6 +1,6 @@
-package net.mcquest.engine.map
+package com.shadowforgedmmo.engine.map
 
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.resource.parseId
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO

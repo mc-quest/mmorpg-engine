@@ -1,6 +1,6 @@
-package net.mcquest.engine.persistence
+package com.shadowforgedmmo.engine.persistence
 
-import net.mcquest.engine.math.Position
+import com.shadowforgedmmo.engine.math.Position
 
 class PlayerCharacterData(
     val instanceId: String,

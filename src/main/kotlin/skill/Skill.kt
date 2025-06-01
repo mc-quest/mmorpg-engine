@@ -1,7 +1,7 @@
-package net.mcquest.engine.skill
+package com.shadowforgedmmo.engine.skill
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.script.parseScriptId
+import com.shadowforgedmmo.engine.script.parseScriptId
 
 class Skill(
     val id: String,

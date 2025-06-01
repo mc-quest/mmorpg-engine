@@ -1,4 +1,4 @@
-package net.mcquest.engine.util
+package com.shadowforgedmmo.engine.util
 
 import com.google.gson.Gson
 import java.io.InputStreamReader

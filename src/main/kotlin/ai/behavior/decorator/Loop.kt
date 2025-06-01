@@ -1,8 +1,8 @@
-package net.mcquest.engine.ai.behavior.decorator
+package com.shadowforgedmmo.engine.ai.behavior.decorator
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.*
-import net.mcquest.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.ai.behavior.*
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 
 class Loop(child: Behavior, private val count: Int) : Decorator(child) {
     private var i = 0

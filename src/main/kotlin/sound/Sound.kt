@@ -1,4 +1,4 @@
-package net.mcquest.engine.sound
+package com.shadowforgedmmo.engine.sound
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.key.Key

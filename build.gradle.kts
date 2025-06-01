@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "net.mcquest"
+group = "com.shadowforgedmmo"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -49,5 +49,5 @@ kotlin {
 }
 
 application {
-    mainClass.set("net.mcquest.engine.MainKt")
+    mainClass.set("com.shadowforgedmmo.engine.MainKt")
 }

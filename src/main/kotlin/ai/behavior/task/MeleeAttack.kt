@@ -1,19 +1,19 @@
-package net.mcquest.engine.ai.behavior.task
+package com.shadowforgedmmo.engine.ai.behavior.task
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.sound.Sound
-import net.mcquest.engine.ai.behavior.BehaviorBlueprint
-import net.mcquest.engine.ai.behavior.BehaviorStatus
-import net.mcquest.engine.ai.behavior.Task
-import net.mcquest.engine.character.Character
-import net.mcquest.engine.character.NonPlayerCharacter
-import net.mcquest.engine.character.Stance
-import net.mcquest.engine.combat.Damage
-import net.mcquest.engine.combat.deserializeDamage
-import net.mcquest.engine.math.BoundingBox3
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.math.deserializeVector3
-import net.mcquest.engine.sound.deserializeSound
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorBlueprint
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorStatus
+import com.shadowforgedmmo.engine.ai.behavior.Task
+import com.shadowforgedmmo.engine.character.Character
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.character.Stance
+import com.shadowforgedmmo.engine.combat.Damage
+import com.shadowforgedmmo.engine.combat.deserializeDamage
+import com.shadowforgedmmo.engine.math.BoundingBox3
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.math.deserializeVector3
+import com.shadowforgedmmo.engine.sound.deserializeSound
 
 class MeleeAttack(
     private val damage: Damage,

@@ -1,9 +1,9 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.character.CharacterBlueprint
-import net.mcquest.engine.character.parseCharacterBlueprintId
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.character.CharacterBlueprint
+import com.shadowforgedmmo.engine.character.parseCharacterBlueprintId
+import com.shadowforgedmmo.engine.runtime.Runtime
 
 abstract class QuestObjective(val goal: Int, val markers: Collection<QuestObjectiveMarker>) {
     abstract val description: String

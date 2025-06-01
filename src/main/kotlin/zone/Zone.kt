@@ -1,23 +1,23 @@
-package net.mcquest.engine.zone
+package com.shadowforgedmmo.engine.zone
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.mcquest.engine.character.CharacterBlueprint
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.character.deserializeNonPlayerCharacterSpawners
-import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.loot.LootChestSpawner
-import net.mcquest.engine.map.AreaMap
-import net.mcquest.engine.map.parseMapId
-import net.mcquest.engine.math.Polygon
-import net.mcquest.engine.math.deserializePolygon
-import net.mcquest.engine.math.deserializePosition
-import net.mcquest.engine.music.Song
-import net.mcquest.engine.music.parseSongId
-import net.mcquest.engine.resource.parseId
-import net.mcquest.engine.transition.deserializeTransitionSpawner
-import net.mcquest.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.character.CharacterBlueprint
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.character.deserializeNonPlayerCharacterSpawners
+import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
+import com.shadowforgedmmo.engine.loot.LootChestSpawner
+import com.shadowforgedmmo.engine.map.AreaMap
+import com.shadowforgedmmo.engine.map.parseMapId
+import com.shadowforgedmmo.engine.math.Polygon
+import com.shadowforgedmmo.engine.math.deserializePolygon
+import com.shadowforgedmmo.engine.math.deserializePosition
+import com.shadowforgedmmo.engine.music.Song
+import com.shadowforgedmmo.engine.music.parseSongId
+import com.shadowforgedmmo.engine.resource.parseId
+import com.shadowforgedmmo.engine.transition.deserializeTransitionSpawner
+import com.shadowforgedmmo.engine.util.schedulerManager
 import java.time.Duration
 import net.minestom.server.instance.Weather as MinestomWeather
 

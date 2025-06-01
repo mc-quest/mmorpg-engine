@@ -1,17 +1,17 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import net.kyori.adventure.text.Component
-import net.mcquest.engine.ai.navigation.Navigator
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.script.SkillExecutor
-import net.mcquest.engine.script.getScriptClass
-import net.mcquest.engine.util.schedulerManager
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.ai.navigation.Navigator
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.script.SkillExecutor
+import com.shadowforgedmmo.engine.script.getScriptClass
+import com.shadowforgedmmo.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.util.toMinestom
 import org.python.core.Py
 import team.unnamed.hephaestus.minestom.MinestomModelEngine
 import team.unnamed.hephaestus.minestom.ModelEntity
-import net.mcquest.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
+import com.shadowforgedmmo.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
 
 class NonPlayerCharacter(
     spawner: NonPlayerCharacterSpawner,

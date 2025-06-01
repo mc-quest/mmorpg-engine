@@ -1,9 +1,9 @@
-package net.mcquest.engine.ai.behavior.composite
+package com.shadowforgedmmo.engine.ai.behavior.composite
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.*
-import net.mcquest.engine.character.NonPlayerCharacter
-import net.mcquest.engine.math.weightedRandomIndex
+import com.shadowforgedmmo.engine.ai.behavior.*
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.math.weightedRandomIndex
 
 class RandomSelector(
     private val weights: List<Double>,

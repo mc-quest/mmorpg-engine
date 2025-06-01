@@ -1,11 +1,11 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.text.Component
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.music.Song
-import net.mcquest.engine.music.parseSongId
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.music.Song
+import com.shadowforgedmmo.engine.music.parseSongId
 
 private const val LEAVE_OFFSET = 5.0
 

@@ -1,9 +1,9 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import com.google.common.collect.ArrayListMultimap
-import net.mcquest.engine.character.NonPlayerCharacter
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.item.QuestItem
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.item.QuestItem
 
 class QuestObjectiveManager {
     private val slayObjectivesByCharacterBlueprintId =

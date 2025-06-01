@@ -1,3 +1,3 @@
-package net.mcquest.engine.event
+package com.shadowforgedmmo.engine.event
 
 interface Event

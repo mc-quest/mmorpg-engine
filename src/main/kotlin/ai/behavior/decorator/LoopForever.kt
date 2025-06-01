@@ -1,8 +1,8 @@
-package net.mcquest.engine.ai.behavior.decorator
+package com.shadowforgedmmo.engine.ai.behavior.decorator
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.*
-import net.mcquest.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.ai.behavior.*
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 
 class LoopForever(child: Behavior) : Decorator(child) {
     override fun update(character: NonPlayerCharacter): BehaviorStatus {

@@ -1,4 +1,4 @@
-package net.mcquest.engine.time
+package com.shadowforgedmmo.engine.time
 
 import java.time.Duration
 

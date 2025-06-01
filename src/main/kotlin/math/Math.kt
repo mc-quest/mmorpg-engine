@@ -1,4 +1,4 @@
-package net.mcquest.engine.math
+package com.shadowforgedmmo.engine.math
 
 fun clamp(value: Double, min: Double, max: Double) =
     if (value < min) min

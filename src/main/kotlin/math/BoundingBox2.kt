@@ -1,4 +1,4 @@
-package net.mcquest.engine.math
+package com.shadowforgedmmo.engine.math
 
 data class BoundingBox2(val min: Vector2, val max: Vector2) {
     init {

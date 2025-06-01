@@ -1,10 +1,10 @@
-package net.mcquest.engine.ai.behavior
+package com.shadowforgedmmo.engine.ai.behavior
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.composite.*
-import net.mcquest.engine.ai.behavior.decorator.*
-import net.mcquest.engine.ai.behavior.task.*
-import net.mcquest.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.ai.behavior.composite.*
+import com.shadowforgedmmo.engine.ai.behavior.decorator.*
+import com.shadowforgedmmo.engine.ai.behavior.task.*
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 
 abstract class Behavior {
     var status: BehaviorStatus = BehaviorStatus.UNINITIALIZED

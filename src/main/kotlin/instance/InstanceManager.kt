@@ -1,6 +1,6 @@
-package net.mcquest.engine.instance
+package com.shadowforgedmmo.engine.instance
 
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.runtime.Runtime
 import net.minestom.server.MinecraftServer
 
 class InstanceManager(instances: Collection<Instance>) {

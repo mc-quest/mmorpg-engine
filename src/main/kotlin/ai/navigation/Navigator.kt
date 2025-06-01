@@ -1,9 +1,9 @@
-package net.mcquest.engine.ai.navigation
+package com.shadowforgedmmo.engine.ai.navigation
 
-import net.mcquest.engine.character.NonPlayerCharacter
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.util.fromMinestom
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.util.fromMinestom
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.attribute.Attribute
 
 class Navigator(private val character: NonPlayerCharacter) {

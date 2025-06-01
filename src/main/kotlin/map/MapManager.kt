@@ -1,4 +1,4 @@
-package net.mcquest.engine.map
+package com.shadowforgedmmo.engine.map
 
 class MapManager {
 }

@@ -1,4 +1,4 @@
-package net.mcquest.engine.pack
+package com.shadowforgedmmo.engine.pack
 
 class Namespaces {
     companion object {

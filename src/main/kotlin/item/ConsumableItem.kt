@@ -1,6 +1,6 @@
-package net.mcquest.engine.item
+package com.shadowforgedmmo.engine.item
 
-import net.mcquest.engine.texture.Icon
+import com.shadowforgedmmo.engine.texture.Icon
 
 class ConsumableItem(
     id: String,

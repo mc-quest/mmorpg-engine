@@ -1,4 +1,4 @@
-package net.mcquest.engine.entity
+package com.shadowforgedmmo.engine.entity
 
 import net.kyori.adventure.text.Component
 import net.minestom.server.entity.Entity

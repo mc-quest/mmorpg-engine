@@ -1,3 +1,3 @@
-package net.mcquest.engine.persistence
+package com.shadowforgedmmo.engine.persistence
 
 class QuestTrackerData

@@ -1,12 +1,12 @@
-package net.mcquest.engine.resource
+package com.shadowforgedmmo.engine.resource
 
-import net.mcquest.engine.character.CharacterBlueprint
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.model.BlockbenchItemModel
-import net.mcquest.engine.model.BlockbenchModel
-import net.mcquest.engine.music.Song
-import net.mcquest.engine.quest.Quest
-import net.mcquest.engine.zone.Zone
+import com.shadowforgedmmo.engine.character.CharacterBlueprint
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.model.BlockbenchItemModel
+import com.shadowforgedmmo.engine.model.BlockbenchModel
+import com.shadowforgedmmo.engine.music.Song
+import com.shadowforgedmmo.engine.quest.Quest
+import com.shadowforgedmmo.engine.zone.Zone
 import net.minestom.server.MinecraftServer
 import java.io.File
 

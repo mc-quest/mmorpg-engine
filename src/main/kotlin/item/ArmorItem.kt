@@ -1,9 +1,9 @@
-package net.mcquest.engine.item
+package com.shadowforgedmmo.engine.item
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.model.ArmorModel
-import net.mcquest.engine.model.BlockbenchItemModel
-import net.mcquest.engine.model.deserializeArmorModel
+import com.shadowforgedmmo.engine.model.ArmorModel
+import com.shadowforgedmmo.engine.model.BlockbenchItemModel
+import com.shadowforgedmmo.engine.model.deserializeArmorModel
 
 class ArmorItem(
     id: String,

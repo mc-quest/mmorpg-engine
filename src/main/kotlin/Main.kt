@@ -1,8 +1,8 @@
-package net.mcquest.engine
+package com.shadowforgedmmo.engine
 
-import net.mcquest.engine.pack.PackBuilder
-import net.mcquest.engine.resource.ResourceLoader
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.pack.PackBuilder
+import com.shadowforgedmmo.engine.resource.ResourceLoader
+import com.shadowforgedmmo.engine.runtime.Runtime
 import java.io.File
 import kotlin.system.exitProcess
 

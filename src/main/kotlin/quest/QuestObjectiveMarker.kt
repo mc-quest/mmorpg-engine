@@ -1,10 +1,10 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.math.Polygon
-import net.mcquest.engine.math.Vector2
-import net.mcquest.engine.math.deserializePolygon
-import net.mcquest.engine.math.deserializeVector2
+import com.shadowforgedmmo.engine.math.Polygon
+import com.shadowforgedmmo.engine.math.Vector2
+import com.shadowforgedmmo.engine.math.deserializePolygon
+import com.shadowforgedmmo.engine.math.deserializeVector2
 import java.awt.Graphics
 
 abstract class QuestObjectiveMarker {

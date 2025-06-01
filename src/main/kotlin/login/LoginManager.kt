@@ -1,15 +1,15 @@
-package net.mcquest.engine.login
+package com.shadowforgedmmo.engine.login
 
 import net.kyori.adventure.resource.ResourcePackInfo
 import net.kyori.adventure.resource.ResourcePackRequest
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.character.PlayerCharacterSpawner
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.persistence.PlayerCharacterData
-import net.mcquest.engine.persistence.QuestTrackerData
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.util.globalEventHandler
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.character.PlayerCharacterSpawner
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.persistence.PlayerCharacterData
+import com.shadowforgedmmo.engine.persistence.QuestTrackerData
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.util.globalEventHandler
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent

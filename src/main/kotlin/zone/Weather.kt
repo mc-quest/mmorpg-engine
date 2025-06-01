@@ -1,7 +1,7 @@
-package net.mcquest.engine.zone
+package com.shadowforgedmmo.engine.zone
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.time.secondsToMillis
+import com.shadowforgedmmo.engine.time.secondsToMillis
 
 data class WeatherCycle(val weatherEntries: List<WeatherEntry>)
 

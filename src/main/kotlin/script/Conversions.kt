@@ -1,9 +1,9 @@
-package net.mcquest.engine.script
+package com.shadowforgedmmo.engine.script
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound as EngineSound
-import net.mcquest.engine.math.Position as EnginePosition
-import net.mcquest.engine.math.Vector3 as EngineVector3
+import com.shadowforgedmmo.engine.math.Position as EnginePosition
+import com.shadowforgedmmo.engine.math.Vector3 as EngineVector3
 
 object ScriptToEngine {
     fun vector3(v: Point) = EngineVector3(v.x, v.y, v.z)

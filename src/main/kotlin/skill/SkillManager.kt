@@ -1,4 +1,4 @@
-package net.mcquest.engine.skill
+package com.shadowforgedmmo.engine.skill
 
 class SkillManager {
 }

@@ -1,10 +1,10 @@
-package net.mcquest.engine.datastructure
+package com.shadowforgedmmo.engine.datastructure
 
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.SetMultimap
-import net.mcquest.engine.math.BoundingBox2
-import net.mcquest.engine.math.Vector2
-import net.mcquest.engine.math.Vector2Int
+import com.shadowforgedmmo.engine.math.BoundingBox2
+import com.shadowforgedmmo.engine.math.Vector2
+import com.shadowforgedmmo.engine.math.Vector2Int
 import kotlin.math.floor
 
 class SpatialHash2<T>(private val cellSize: Double) {

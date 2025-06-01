@@ -1,7 +1,7 @@
-package net.mcquest.engine.sound
+package com.shadowforgedmmo.engine.sound
 
 import net.kyori.adventure.key.Key
-import net.mcquest.engine.pack.Namespaces
+import com.shadowforgedmmo.engine.pack.Namespaces
 import java.io.File
 
 class SoundAsset(val id: String, val file: File) {

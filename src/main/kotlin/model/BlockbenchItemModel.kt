@@ -1,6 +1,6 @@
-package net.mcquest.engine.model
+package com.shadowforgedmmo.engine.model
 
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.resource.parseId
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 import team.unnamed.hephaestus.Model

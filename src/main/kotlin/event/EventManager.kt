@@ -1,4 +1,4 @@
-package net.mcquest.engine.event
+package com.shadowforgedmmo.engine.event
 
 class EventManager {
     fun call(event: Event) {

@@ -1,9 +1,9 @@
-package net.mcquest.engine.map
+package com.shadowforgedmmo.engine.map
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.math.Vector2
-import net.mcquest.engine.math.deserializeVector2
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.math.Vector2
+import com.shadowforgedmmo.engine.math.deserializeVector2
+import com.shadowforgedmmo.engine.resource.parseId
 
 data class AreaMap(
     val id: String,

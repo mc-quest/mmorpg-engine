@@ -1,13 +1,13 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.persistence.PlayerCharacterData
-import net.mcquest.engine.persistence.QuestTrackerData
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.util.globalEventHandler
-import net.mcquest.engine.util.schedulerManager
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.persistence.PlayerCharacterData
+import com.shadowforgedmmo.engine.persistence.QuestTrackerData
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.util.globalEventHandler
+import com.shadowforgedmmo.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.*

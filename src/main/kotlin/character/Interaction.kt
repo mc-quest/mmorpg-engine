@@ -1,12 +1,12 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.quest.Quest
-import net.mcquest.engine.quest.parseQuestId
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.quest.Quest
+import com.shadowforgedmmo.engine.quest.parseQuestId
 
 abstract class Interaction {
     abstract fun isAvailable(pc: PlayerCharacter): Boolean

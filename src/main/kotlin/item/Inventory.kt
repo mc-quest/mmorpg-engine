@@ -1,6 +1,6 @@
-package net.mcquest.engine.item
+package com.shadowforgedmmo.engine.item
 
-import net.mcquest.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.character.PlayerCharacter
 
 class Inventory(private val pc: PlayerCharacter) {
     fun tryUseConsumable(slot: Int) {

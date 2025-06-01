@@ -1,4 +1,4 @@
-package net.mcquest.engine.item
+package com.shadowforgedmmo.engine.item
 
 abstract class Item(
     val id: String,

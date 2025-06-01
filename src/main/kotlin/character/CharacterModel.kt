@@ -1,9 +1,9 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.entity.EntityHuman
-import net.mcquest.engine.model.*
-import net.mcquest.engine.resource.splitId
+import com.shadowforgedmmo.engine.entity.EntityHuman
+import com.shadowforgedmmo.engine.model.*
+import com.shadowforgedmmo.engine.resource.splitId
 import net.minestom.server.entity.EntityCreature
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.other.ArmorStandMeta

@@ -1,12 +1,12 @@
-package net.mcquest.engine.gameobject
+package com.shadowforgedmmo.engine.gameobject
 
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.BoundingBox3
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.util.fromMinestom
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.BoundingBox3
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.util.fromMinestom
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.collision.BoundingBox
 import net.minestom.server.entity.Entity
 import net.minestom.server.tag.Tag

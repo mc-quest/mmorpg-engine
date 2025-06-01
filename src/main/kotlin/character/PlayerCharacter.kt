@@ -1,21 +1,21 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
-import net.mcquest.engine.combat.Damage
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.item.Inventory
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.music.MusicPlayer
-import net.mcquest.engine.persistence.PlayerCharacterData
-import net.mcquest.engine.quest.QuestTracker
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.skill.SkillTracker
-import net.mcquest.engine.time.secondsToTicks
-import net.mcquest.engine.util.schedulerManager
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.combat.Damage
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.item.Inventory
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.music.MusicPlayer
+import com.shadowforgedmmo.engine.persistence.PlayerCharacterData
+import com.shadowforgedmmo.engine.quest.QuestTracker
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.skill.SkillTracker
+import com.shadowforgedmmo.engine.time.secondsToTicks
+import com.shadowforgedmmo.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.attribute.Attribute
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerDisconnectEvent
@@ -24,7 +24,7 @@ import net.minestom.server.potion.Potion
 import net.minestom.server.potion.PotionEffect
 import java.time.Duration
 import kotlin.math.ceil
-import net.mcquest.engine.script.PlayerCharacter as ScriptPlayerCharacter
+import com.shadowforgedmmo.engine.script.PlayerCharacter as ScriptPlayerCharacter
 
 class PlayerCharacter(
     spawner: PlayerCharacterSpawner,

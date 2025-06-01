@@ -1,7 +1,7 @@
-package net.mcquest.engine.music
+package com.shadowforgedmmo.engine.music
 
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.util.schedulerManager
 import net.minestom.server.timer.Task
 import java.time.Duration
 

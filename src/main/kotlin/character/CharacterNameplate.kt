@@ -1,9 +1,9 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
-import net.mcquest.engine.entity.Hologram
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.entity.Hologram
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.util.toMinestom
 import java.util.*
 import kotlin.math.pow
 

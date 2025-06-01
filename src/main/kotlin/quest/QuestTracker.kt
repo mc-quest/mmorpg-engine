@@ -1,4 +1,4 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
@@ -6,9 +6,9 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.title.Title
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.pack.Namespaces
-import net.mcquest.engine.persistence.QuestTrackerData
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.pack.Namespaces
+import com.shadowforgedmmo.engine.persistence.QuestTrackerData
 import net.minestom.server.scoreboard.Sidebar
 import net.minestom.server.scoreboard.Sidebar.ScoreboardLine
 

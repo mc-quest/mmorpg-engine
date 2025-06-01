@@ -1,4 +1,4 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 const val ANIMATION_SWING_MAIN_HAND = "swing_main_hand"
 const val ANIMATION_SWING_OFF_HAND = "swing_off_hand"

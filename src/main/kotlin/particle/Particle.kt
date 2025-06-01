@@ -1,4 +1,4 @@
-package net.mcquest.engine.particle
+package com.shadowforgedmmo.engine.particle
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.minestom.server.instance.block.Block

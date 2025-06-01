@@ -1,8 +1,8 @@
-package net.mcquest.engine.ai.behavior.composite
+package com.shadowforgedmmo.engine.ai.behavior.composite
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.*
-import net.mcquest.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.ai.behavior.*
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 
 class Sequence(children: List<Behavior>) : Composite(children) {
     private var currentChild = 0

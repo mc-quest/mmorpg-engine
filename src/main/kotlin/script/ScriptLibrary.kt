@@ -1,23 +1,23 @@
 @file:Suppress("FunctionName", "PropertyName", "unused")
 
-package net.mcquest.engine.script
+package com.shadowforgedmmo.engine.script
 
-import net.mcquest.engine.combat.DamageType
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.skill.SkillStatus
-import net.mcquest.engine.time.millisToSeconds
-import net.mcquest.engine.time.secondsToDuration
-import net.mcquest.engine.util.schedulerManager
+import com.shadowforgedmmo.engine.combat.DamageType
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.skill.SkillStatus
+import com.shadowforgedmmo.engine.time.millisToSeconds
+import com.shadowforgedmmo.engine.time.secondsToDuration
+import com.shadowforgedmmo.engine.util.schedulerManager
 import org.python.core.*
 import org.python.util.PythonInterpreter
-import net.mcquest.engine.character.Character as EngineCharacter
-import net.mcquest.engine.character.NonPlayerCharacter as EngineNonPlayerCharacter
-import net.mcquest.engine.character.PlayerCharacter as EnginePlayerCharacter
-import net.mcquest.engine.instance.Instance as EngineInstance
-import net.mcquest.engine.skill.SkillExecutor as EngineSkillExecutor
+import com.shadowforgedmmo.engine.character.Character as EngineCharacter
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter as EngineNonPlayerCharacter
+import com.shadowforgedmmo.engine.character.PlayerCharacter as EnginePlayerCharacter
+import com.shadowforgedmmo.engine.instance.Instance as EngineInstance
+import com.shadowforgedmmo.engine.skill.SkillExecutor as EngineSkillExecutor
 import net.minestom.server.timer.Task as EngineTask
 
-const val moduleName = "mmorpg_engine"
+const val moduleName = "shadowforged_engine"
 
 fun loadScriptLibrary(interpreter: PythonInterpreter, runtime: Runtime) {
     val classes = mapOf(

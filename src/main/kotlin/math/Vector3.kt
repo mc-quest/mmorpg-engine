@@ -1,4 +1,4 @@
-package net.mcquest.engine.math
+package com.shadowforgedmmo.engine.math
 
 import com.fasterxml.jackson.databind.JsonNode
 import kotlin.math.cos

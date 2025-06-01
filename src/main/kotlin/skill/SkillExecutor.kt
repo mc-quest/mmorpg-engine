@@ -1,8 +1,8 @@
-package net.mcquest.engine.skill
+package com.shadowforgedmmo.engine.skill
 
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.script.getScriptClass
-import net.mcquest.engine.script.SkillExecutor as ScriptSkillExecutor
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.script.getScriptClass
+import com.shadowforgedmmo.engine.script.SkillExecutor as ScriptSkillExecutor
 import org.python.core.Py
 
 class SkillExecutor(

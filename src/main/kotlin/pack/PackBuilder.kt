@@ -1,10 +1,10 @@
-package net.mcquest.engine.pack
+package com.shadowforgedmmo.engine.pack
 
 import net.kyori.adventure.key.Key
-import net.mcquest.engine.model.BlockbenchModel
-import net.mcquest.engine.model.BlockbenchItemModelAsset
-import net.mcquest.engine.resource.ResourceLoader
-import net.mcquest.engine.util.loadJsonResource
+import com.shadowforgedmmo.engine.model.BlockbenchModel
+import com.shadowforgedmmo.engine.model.BlockbenchItemModelAsset
+import com.shadowforgedmmo.engine.resource.ResourceLoader
+import com.shadowforgedmmo.engine.util.loadJsonResource
 import net.minestom.server.item.Material
 import team.unnamed.creative.ResourcePack
 import team.unnamed.creative.base.Writable

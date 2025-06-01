@@ -1,6 +1,6 @@
-package net.mcquest.engine.entity
+package com.shadowforgedmmo.engine.entity
 
-import net.mcquest.engine.model.Skin
+import com.shadowforgedmmo.engine.model.Skin
 import net.minestom.server.entity.*
 import net.minestom.server.network.packet.server.play.EntityMetaDataPacket
 import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket

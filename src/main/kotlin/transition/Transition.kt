@@ -1,18 +1,18 @@
-package net.mcquest.engine.transition
+package com.shadowforgedmmo.engine.transition
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.entity.Hologram
-import net.mcquest.engine.gameobject.GameObject
-import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.instance.parseInstanceId
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.math.deserializePosition
-import net.mcquest.engine.math.deserializeVector3
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.entity.Hologram
+import com.shadowforgedmmo.engine.gameobject.GameObject
+import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.instance.parseInstanceId
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.math.deserializePosition
+import com.shadowforgedmmo.engine.math.deserializeVector3
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 

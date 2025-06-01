@@ -1,7 +1,7 @@
-package net.mcquest.engine.util
+package com.shadowforgedmmo.engine.util
 
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.Vector3
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.Vector3
 import net.minestom.server.MinecraftServer
 import net.minestom.server.collision.BoundingBox
 import net.minestom.server.coordinate.Point

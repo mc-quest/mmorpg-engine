@@ -1,6 +1,6 @@
-package net.mcquest.engine.model
+package com.shadowforgedmmo.engine.model
 
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.resource.parseId
 import team.unnamed.hephaestus.Model
 import team.unnamed.hephaestus.reader.ModelReader
 import java.io.File

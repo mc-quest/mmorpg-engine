@@ -1,4 +1,4 @@
-package net.mcquest.engine.playerclass
+package com.shadowforgedmmo.engine.playerclass
 
 class PlayerClassManager {
 }

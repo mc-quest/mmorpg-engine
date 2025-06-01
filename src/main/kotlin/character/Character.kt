@@ -1,20 +1,20 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
-import net.mcquest.engine.combat.Damage
-import net.mcquest.engine.gameobject.GameObject
-import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.runtime.Runtime
-import net.mcquest.engine.util.fromMinestom
-import net.mcquest.engine.util.toMinestom
+import com.shadowforgedmmo.engine.combat.Damage
+import com.shadowforgedmmo.engine.gameobject.GameObject
+import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.util.fromMinestom
+import com.shadowforgedmmo.engine.util.toMinestom
 import net.minestom.server.entity.LivingEntity
 import team.unnamed.hephaestus.minestom.ModelEntity
 import kotlin.math.ceil
-import net.mcquest.engine.script.Character as ScriptCharacter
+import com.shadowforgedmmo.engine.script.Character as ScriptCharacter
 
 abstract class Character(
     spawner: GameObjectSpawner,

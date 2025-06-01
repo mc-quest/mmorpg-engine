@@ -1,9 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
-from typing import Callable, ClassVar, TypeVar, Union
+from typing import Callable, ClassVar, Protocol, TypeVar, Union
 
-class Point:
+class Point(Protocol):
     """Represents a 3D point interface with x, y, and z coordinates."""
 
     @property
@@ -17,7 +17,7 @@ class Point:
 
 
 @dataclass
-class Vector(Point):
+class Vector:
     """Represents a 3D vector."""
 
     x: float
@@ -83,7 +83,7 @@ class Vector(Point):
 
 
 @dataclass
-class Position(Point):
+class Position:
     """Represents a 3D position with yaw and pitch."""
 
     x: float
@@ -170,7 +170,7 @@ class Instance:
         """
         ...
 
-    def play_sound(self, position: Position, sound: Sound) -> None:
+    def play_sound(self, position: Point, sound: Sound) -> None:
         """Plays a sound at the given position.
 
         Args:
@@ -184,7 +184,7 @@ class Instance:
 
     def get_characters_in_box(
         self,
-        position: Position,
+        position: Point,
         half_extents: Vector,
         filter: Callable[[Character], bool] = lambda _: True
     ) -> list[Character]:

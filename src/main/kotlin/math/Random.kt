@@ -1,4 +1,4 @@
-package net.mcquest.engine.math
+package com.shadowforgedmmo.engine.math
 
 import kotlin.random.Random
 

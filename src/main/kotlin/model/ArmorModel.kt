@@ -1,4 +1,4 @@
-package net.mcquest.engine.model
+package com.shadowforgedmmo.engine.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.minestom.server.item.ItemStack

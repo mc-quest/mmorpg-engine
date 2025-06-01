@@ -1,4 +1,4 @@
-package net.mcquest.engine.zone
+package com.shadowforgedmmo.engine.zone
 
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor

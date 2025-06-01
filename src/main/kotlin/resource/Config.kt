@@ -1,4 +1,4 @@
-package net.mcquest.engine.resource
+package com.shadowforgedmmo.engine.resource
 
 import com.fasterxml.jackson.databind.JsonNode
 import java.net.URI

@@ -1,20 +1,20 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.sound.Sound
-import net.mcquest.engine.ai.behavior.BehaviorBlueprint
-import net.mcquest.engine.ai.behavior.deserializeBehaviorBlueprint
-import net.mcquest.engine.loot.LootTable
-import net.mcquest.engine.loot.deserializeLootTable
-import net.mcquest.engine.model.BlockbenchItemModel
-import net.mcquest.engine.model.BlockbenchModel
-import net.mcquest.engine.model.Skin
-import net.mcquest.engine.music.Song
-import net.mcquest.engine.quest.Quest
-import net.mcquest.engine.resource.parseId
-import net.mcquest.engine.script.parseScriptId
-import net.mcquest.engine.sound.deserializeSound
-import net.mcquest.engine.time.secondsToDuration
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorBlueprint
+import com.shadowforgedmmo.engine.ai.behavior.deserializeBehaviorBlueprint
+import com.shadowforgedmmo.engine.loot.LootTable
+import com.shadowforgedmmo.engine.loot.deserializeLootTable
+import com.shadowforgedmmo.engine.model.BlockbenchItemModel
+import com.shadowforgedmmo.engine.model.BlockbenchModel
+import com.shadowforgedmmo.engine.model.Skin
+import com.shadowforgedmmo.engine.music.Song
+import com.shadowforgedmmo.engine.quest.Quest
+import com.shadowforgedmmo.engine.resource.parseId
+import com.shadowforgedmmo.engine.script.parseScriptId
+import com.shadowforgedmmo.engine.sound.deserializeSound
+import com.shadowforgedmmo.engine.time.secondsToDuration
 import java.time.Duration
 
 class CharacterBlueprint(

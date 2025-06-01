@@ -1,10 +1,10 @@
-package net.mcquest.engine.ai.behavior.task
+package com.shadowforgedmmo.engine.ai.behavior.task
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.BehaviorBlueprint
-import net.mcquest.engine.ai.behavior.BehaviorStatus
-import net.mcquest.engine.ai.behavior.Task
-import net.mcquest.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorBlueprint
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorStatus
+import com.shadowforgedmmo.engine.ai.behavior.Task
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 import org.python.core.Py
 import org.python.core.PyBoolean
 

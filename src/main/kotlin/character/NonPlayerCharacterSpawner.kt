@@ -1,11 +1,11 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.gameobject.GameObjectSpawner
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Position
-import net.mcquest.engine.math.deserializePosition
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Position
+import com.shadowforgedmmo.engine.math.deserializePosition
+import com.shadowforgedmmo.engine.runtime.Runtime
 
 class NonPlayerCharacterSpawner(
     position: Position,

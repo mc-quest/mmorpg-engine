@@ -1,13 +1,13 @@
-package net.mcquest.engine.ai.behavior.task
+package com.shadowforgedmmo.engine.ai.behavior.task
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.ai.behavior.BehaviorBlueprint
-import net.mcquest.engine.ai.behavior.BehaviorStatus
-import net.mcquest.engine.ai.behavior.Task
-import net.mcquest.engine.character.NonPlayerCharacter
-import net.mcquest.engine.math.Vector3
-import net.mcquest.engine.math.deserializeVector3
-import net.mcquest.engine.particle.deserializeParticle
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorBlueprint
+import com.shadowforgedmmo.engine.ai.behavior.BehaviorStatus
+import com.shadowforgedmmo.engine.ai.behavior.Task
+import com.shadowforgedmmo.engine.character.NonPlayerCharacter
+import com.shadowforgedmmo.engine.math.Vector3
+import com.shadowforgedmmo.engine.math.deserializeVector3
+import com.shadowforgedmmo.engine.particle.deserializeParticle
 import net.minestom.server.particle.Particle
 
 class EmitParticle(

@@ -1,8 +1,8 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.resource.parseId
-import net.mcquest.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.resource.parseId
+import com.shadowforgedmmo.engine.runtime.Runtime
 
 class Quest(
     val id: String,

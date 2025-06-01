@@ -1,4 +1,4 @@
-package net.mcquest.engine.music
+package com.shadowforgedmmo.engine.music
 
 class MusicManager(music: Collection<Song>) {
     private val musicById = music.associateBy(Song::id)

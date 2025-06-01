@@ -1,4 +1,4 @@
-package net.mcquest.engine.character
+package com.shadowforgedmmo.engine.character
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.kyori.adventure.text.format.NamedTextColor

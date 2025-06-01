@@ -1,8 +1,8 @@
-package net.mcquest.engine.sound
+package com.shadowforgedmmo.engine.sound
 
 import net.kyori.adventure.sound.Sound
-import net.mcquest.engine.instance.Instance
-import net.mcquest.engine.math.Vector3
+import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Vector3
 
 class SoundManager {
     fun playSound(instance: Instance, position: Vector3, sound: Sound) =

@@ -1,9 +1,9 @@
-package net.mcquest.engine.music
+package com.shadowforgedmmo.engine.music
 
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
-import net.mcquest.engine.resource.parseId
-import net.mcquest.engine.time.secondsToMillis
+import com.shadowforgedmmo.engine.resource.parseId
+import com.shadowforgedmmo.engine.time.secondsToMillis
 import org.gagravarr.ogg.audio.OggAudioStatistics
 import org.gagravarr.vorbis.VorbisFile
 import java.io.File

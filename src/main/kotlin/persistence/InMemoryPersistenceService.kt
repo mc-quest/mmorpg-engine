@@ -1,4 +1,4 @@
-package net.mcquest.engine.persistence
+package com.shadowforgedmmo.engine.persistence
 
 import com.fasterxml.jackson.databind.JsonNode
 import java.util.*

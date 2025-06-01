@@ -1,8 +1,8 @@
-package net.mcquest.engine.quest
+package com.shadowforgedmmo.engine.quest
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.item.Item
-import net.mcquest.engine.playerclass.PlayerClass
+import com.shadowforgedmmo.engine.item.Item
+import com.shadowforgedmmo.engine.playerclass.PlayerClass
 
 class QuestRewards(
     val experience: Int,

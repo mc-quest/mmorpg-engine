@@ -1,8 +1,8 @@
-package net.mcquest.engine.skill
+package com.shadowforgedmmo.engine.skill
 
 import net.kyori.adventure.text.Component
-import net.mcquest.engine.character.PlayerCharacter
-import net.mcquest.engine.time.Cooldown
+import com.shadowforgedmmo.engine.character.PlayerCharacter
+import com.shadowforgedmmo.engine.time.Cooldown
 import net.minestom.server.item.ItemStack
 import net.minestom.server.item.Material
 import net.minestom.server.tag.Tag

@@ -1,4 +1,4 @@
-package net.mcquest.engine.texture
+package com.shadowforgedmmo.engine.texture
 
 import java.awt.image.BufferedImage
 

@@ -1,7 +1,7 @@
-package net.mcquest.engine.model
+package com.shadowforgedmmo.engine.model
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.resource.parseId
 
 class Skin(val id: String, val textures: String, val signature: String)
 

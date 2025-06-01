@@ -1,4 +1,4 @@
-package net.mcquest.engine.item
+package com.shadowforgedmmo.engine.item
 
 class QuestItem(
     id: String,

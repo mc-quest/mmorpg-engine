@@ -1,7 +1,7 @@
-package net.mcquest.engine.script
+package com.shadowforgedmmo.engine.script
 
 import com.google.common.base.CaseFormat
-import net.mcquest.engine.resource.parseId
+import com.shadowforgedmmo.engine.resource.parseId
 import org.python.core.PyObject
 import org.python.util.PythonInterpreter
 
