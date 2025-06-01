@@ -1,15 +1,13 @@
 package com.shadowforgedmmo.engine.character
 
-import net.kyori.adventure.text.Component
 import com.shadowforgedmmo.engine.ai.navigation.Navigator
+import com.shadowforgedmmo.engine.combat.Damage
 import com.shadowforgedmmo.engine.instance.Instance
+import com.shadowforgedmmo.engine.math.Vector3
 import com.shadowforgedmmo.engine.runtime.Runtime
-import com.shadowforgedmmo.engine.script.SkillExecutor
-import com.shadowforgedmmo.engine.script.getScriptClass
 import com.shadowforgedmmo.engine.util.schedulerManager
-import com.shadowforgedmmo.engine.util.toMinestom
-import org.python.core.Py
-import team.unnamed.hephaestus.minestom.MinestomModelEngine
+import net.kyori.adventure.text.Component
+import net.minestom.server.particle.Particle
 import team.unnamed.hephaestus.minestom.ModelEntity
 import com.shadowforgedmmo.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
 
@@ -89,6 +87,11 @@ class NonPlayerCharacter(
 
     override fun getStance(toward: Character) = blueprint.stances.stance(toward)
 
+    override fun damage(damage: Damage, source: Character) {
+        if (source is PlayerCharacter) attackers.add(source)
+        super.damage(damage, source)
+    }
+
     override fun die() {
         navigator.reset()
         if (entity is ModelEntity) {
@@ -96,19 +99,34 @@ class NonPlayerCharacter(
         }
         playAnimation(ANIMATION_DEATH)
         blueprint.deathSound?.let(::emitSound)
-        schedulerManager.buildTask(::finalizeDeath)
-            .delay(blueprint.removalDelay)
-            .schedule()
         attackers.forEach {
             runtime.questObjectiveManager.handleCharacterDeath(it, this)
         }
+        schedulerManager.buildTask(::finalizeDeath)
+            .delay(blueprint.removalDelay)
+            .schedule()
+    }
+
+    fun distributeExperiencePoints() {
+        if (attackers.isEmpty()) return
+        val experiencePointsEach = blueprint.experiencePoints / attackers.size
+        if (experiencePointsEach == 0) return
+        val experiencePointsPosition = position.toVector3() + Vector3.UP * height / 2.0
+        attackers.forEach { it.addExperiencePoints(experiencePointsEach, experiencePointsPosition) }
     }
 
     private fun finalizeDeath() {
         // TODO: loot
-        attackers.forEach {
-            it.addExperiencePoints(blueprint.experiencePoints / attackers.size)
-        }
+        distributeExperiencePoints()
         remove()
+        spawnDeathParticles()
     }
+
+    private fun spawnDeathParticles() = instance.spawnParticle(
+        position.toVector3() - Vector3.ONE / 4.0 + Vector3.UP,
+        Particle.POOF,
+        offset = Vector3.ONE / 2.0,
+        maxSpeed = 0.1,
+        count = 10
+    )
 }

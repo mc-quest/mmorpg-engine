@@ -35,9 +35,9 @@ class QuestObjectiveManager {
 
     fun handleCharacterDeath(killer: PlayerCharacter, killed: NonPlayerCharacter) {
         slayObjectivesByCharacterBlueprintId[killed.blueprint.id]
-            .first { (quest, objectiveIndex) ->
+            .firstOrNull() { (quest, objectiveIndex) ->
                 killer.questTracker.isInProgress(quest, objectiveIndex)
-            }.let { (quest, objectiveIndex) ->
+            }?.let { (quest, objectiveIndex) ->
                 killer.questTracker.incrementProgress(quest, objectiveIndex)
             }
     }

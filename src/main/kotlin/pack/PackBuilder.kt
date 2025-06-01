@@ -148,7 +148,7 @@ class PackBuilder(private val resourceLoader: ResourceLoader) {
     private fun disableMinecraftMusic() {
         val minecraftMusic = loadJsonResource(
             "data/minecraft_music.json",
-            Array<String>::class.java
+            Array<String>::class
         )
         val soundEvents = minecraftMusic.map { song ->
             SoundEvent.soundEvent(

@@ -1,10 +1,7 @@
 package com.shadowforgedmmo.engine.character
 
-import net.kyori.adventure.sound.Sound
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.title.Title
 import com.shadowforgedmmo.engine.combat.Damage
+import com.shadowforgedmmo.engine.entity.Hologram
 import com.shadowforgedmmo.engine.instance.Instance
 import com.shadowforgedmmo.engine.item.Inventory
 import com.shadowforgedmmo.engine.math.Vector3
@@ -14,17 +11,30 @@ import com.shadowforgedmmo.engine.quest.QuestTracker
 import com.shadowforgedmmo.engine.runtime.Runtime
 import com.shadowforgedmmo.engine.skill.SkillTracker
 import com.shadowforgedmmo.engine.time.secondsToTicks
+import com.shadowforgedmmo.engine.util.loadJsonResource
 import com.shadowforgedmmo.engine.util.schedulerManager
 import com.shadowforgedmmo.engine.util.toMinestom
+import net.kyori.adventure.sound.Sound
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.title.Title
 import net.minestom.server.attribute.Attribute
 import net.minestom.server.entity.Player
-import net.minestom.server.event.player.PlayerDisconnectEvent
 import net.minestom.server.network.packet.server.play.HitAnimationPacket
 import net.minestom.server.potion.Potion
 import net.minestom.server.potion.PotionEffect
+import net.minestom.server.timer.TaskSchedule
 import java.time.Duration
 import kotlin.math.ceil
 import com.shadowforgedmmo.engine.script.PlayerCharacter as ScriptPlayerCharacter
+
+val experiencePointsPerLevel = loadJsonResource(
+    "data/experience_points_per_level.json",
+    Array<Int>::class
+).toList() + listOf(Integer.MAX_VALUE)
+val experiencePointsPerLevelPrefixSum =
+    listOf(0) + experiencePointsPerLevel.dropLast(1).runningReduce { acc, points -> acc + points }
+val maxExperiencePoints = experiencePointsPerLevelPrefixSum.last()
 
 class PlayerCharacter(
     spawner: PlayerCharacterSpawner,
@@ -35,8 +45,11 @@ class PlayerCharacter(
 ) : Character(spawner, instance, runtime) {
     override val name
         get() = entity.username
-    override var level = 1 // TODO: update nameplate on set
-    var experiencePoints = 0 // TODO
+
+    override var level = 1 // TODO INITIALIZE USING DATA
+        private set
+
+    var experiencePoints = 0 // TODO INITIALIZE USING DATA
         private set
 
     override var maxHealth = data.maxHealth
@@ -53,7 +66,9 @@ class PlayerCharacter(
             nameplate.updateHealthBar()
         }
 
-    override val mass = 70.0
+    override val mass
+        get() = 70.0
+
     var maxMana = 1.0
     var mana = 1.0
     override val handle = ScriptPlayerCharacter(this)
@@ -77,6 +92,8 @@ class PlayerCharacter(
     override fun spawn() {
         // entityTeleporting = true
         super.spawn()
+        updateExperienceBar()
+        updateLevelDisplay()
         questTracker.start()
         entity.setHeldItemSlot(8)
         enterZone()
@@ -143,14 +160,49 @@ class PlayerCharacter(
         enableMovement()
     }
 
-    fun addExperiencePoints(points: Int) {
-        experiencePoints += points
+    fun addExperiencePoints(points: Int, position: Vector3) {
+        experiencePoints = (experiencePoints + points).coerceAtMost(maxExperiencePoints)
+        checkForLevelUp()
+        updateExperienceBar()
+        spawnExperiencePointsNotification(points, position)
+    }
+
+    private fun checkForLevelUp() {
+        while (experiencePointsIntoLevel() >= experiencePointsForNextLevel()) levelUp()
+    }
+
+    private fun levelUp() {
+        level++
+        updateLevelDisplay()
+        // TODO: sounds, particles, and message
+    }
+
+    private fun updateLevelDisplay() {
+        entity.level = level
+    }
+
+    private fun updateExperienceBar() {
+        entity.exp = experiencePointsIntoLevel().toFloat() / experiencePointsForNextLevel().toFloat()
+    }
+
+    private fun experiencePointsIntoLevel() = experiencePoints - experiencePointsPerLevelPrefixSum[level - 1]
+
+    private fun experiencePointsForNextLevel() = experiencePointsPerLevel[level - 1]
+
+    private fun spawnExperiencePointsNotification(points: Int, position: Vector3) {
+        val hologram = Hologram()
+        hologram.text = Component.text("+$points XP", NamedTextColor.GREEN)
+        hologram.isAutoViewable = false
+        hologram.velocity = (Vector3.UP * 0.5).toMinestom()
+        hologram.setInstance(instance.instanceContainer, position.toMinestom()).join()
+        hologram.addViewer(entity)
+        schedulerManager.buildTask(hologram::remove).delay(TaskSchedule.seconds(2)).schedule()
     }
 
     fun sendMessage(message: Component) = entity.sendMessage(message)
 
     private fun updateHealthBar() {
-        entity.health = maxOf((20.0 * (health / maxHealth)).toFloat(), 1.0F)
+        entity.health = (20.0 * (health / maxHealth)).toFloat()
     }
 
     private fun actionBar() =
