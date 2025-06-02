@@ -4,36 +4,66 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.shadowforgedmmo.engine.entity.EntityHuman
 import com.shadowforgedmmo.engine.model.*
 import com.shadowforgedmmo.engine.resource.splitId
+import com.shadowforgedmmo.engine.util.loadJsonResource
+import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityCreature
 import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.metadata.other.ArmorStandMeta
-import team.unnamed.hephaestus.Model
 import team.unnamed.hephaestus.minestom.ModelEntity
+
+val hitboxEntityTypes = loadJsonResource(
+    "data/hitbox_entity_types.json",
+    Array<String>::class
+).map(EntityType::fromNamespaceId)
 
 abstract class CharacterModel {
     abstract fun createEntity(): EntityCreature
 }
 
 class BlockbenchCharacterModel(
-    val model: BlockbenchModel,
+    val blockbenchModel: BlockbenchModel,
     val scale: Float = 1.0F
 ) : CharacterModel() {
-    override fun createEntity(): ModelEntity =
-        BlockbenchCharacterModelEntity(model.model, scale)
+    val hitboxEntityType = chooseHitboxEntityType()
+
+    private fun chooseHitboxEntityType(): EntityType {
+        val modelDims = blockbenchModel.model.boundingBox().multiply(scale)
+        val modelWidth = modelDims.x().toDouble()
+        val modelHeight = modelDims.y().toDouble()
+        return hitboxEntityTypes.maxBy {
+            val entityWidth = it.width()
+            val entityHeight = it.height()
+            2 * minOf(modelWidth, entityWidth) / maxOf(modelWidth, entityWidth) +
+                    minOf(modelHeight, entityHeight) / maxOf(modelHeight, entityHeight)
+        }
+    }
+
+    override fun createEntity() = BlockbenchCharacterModelEntity(this)
 }
 
-private class BlockbenchCharacterModelEntity(model: Model, scale: Float) : ModelEntity(
+class BlockbenchCharacterModelEntity(characterModel: BlockbenchCharacterModel) : ModelEntity(
     EntityType.ARMOR_STAND,
-    model,
-    scale
+    characterModel.blockbenchModel.model,
+    characterModel.scale
 ) {
+    private val hitbox = Entity(characterModel.hitboxEntityType)
+
     init {
         val meta = getEntityMeta() as ArmorStandMeta
         meta.isMarker = true
         meta.isHasNoGravity = false
+
+        hitbox.isInvisible = true
     }
 
     override fun tickAnimations() = animationPlayer().tick(position.yaw(), 0.0F)
+
+    fun spawnHitbox() {
+        hitbox.setInstance(instance, position).join()
+        addPassenger(hitbox)
+    }
+
+    fun removeHitbox() = hitbox.remove()
 }
 
 class CharacterModelEquipment(

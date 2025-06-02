@@ -8,7 +8,6 @@ import com.shadowforgedmmo.engine.runtime.Runtime
 import com.shadowforgedmmo.engine.util.schedulerManager
 import net.kyori.adventure.text.Component
 import net.minestom.server.particle.Particle
-import team.unnamed.hephaestus.minestom.ModelEntity
 import com.shadowforgedmmo.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
 
 class NonPlayerCharacter(
@@ -38,12 +37,14 @@ class NonPlayerCharacter(
 
     override fun spawn() {
         super.spawn()
+        if (entity is BlockbenchCharacterModelEntity) entity.spawnHitbox()
         bossFight?.init()
         handle.on_spawn()
     }
 
     override fun despawn() {
         super.despawn()
+        if (entity is BlockbenchCharacterModelEntity) entity.removeHitbox()
         bossFight?.remove()
         handle.on_despawn()
     }
@@ -94,20 +95,14 @@ class NonPlayerCharacter(
 
     override fun die() {
         navigator.reset()
-        if (entity is ModelEntity) {
-            entity.animationPlayer().clear()
-        }
+        if (entity is BlockbenchCharacterModelEntity) entity.animationPlayer().clear()
         playAnimation(ANIMATION_DEATH)
         blueprint.deathSound?.let(::emitSound)
-        attackers.forEach {
-            runtime.questObjectiveManager.handleCharacterDeath(it, this)
-        }
-        schedulerManager.buildTask(::finalizeDeath)
-            .delay(blueprint.removalDelay)
-            .schedule()
+        attackers.forEach { runtime.questObjectiveManager.handleCharacterDeath(it, this) }
+        schedulerManager.buildTask(::finalizeDeath).delay(blueprint.removalDelay).schedule()
     }
 
-    fun distributeExperiencePoints() {
+    private fun distributeExperiencePoints() {
         if (attackers.isEmpty()) return
         val experiencePointsEach = blueprint.experiencePoints / attackers.size
         if (experiencePointsEach == 0) return
