@@ -202,7 +202,7 @@ class PlayerCharacter(
     fun sendMessage(message: Component) = entity.sendMessage(message)
 
     private fun updateHealthBar() {
-        entity.health = (20.0 * (health / maxHealth)).toFloat()
+        entity.health = (20.0 * (health / maxHealth)).toFloat().coerceAtLeast(1.0F)
     }
 
     private fun actionBar() =
