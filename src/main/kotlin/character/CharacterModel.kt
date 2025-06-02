@@ -116,7 +116,7 @@ fun deserializeCharacterModel(
 
     return when (data["type"].asText()) {
         "blockbench" -> {
-            val modelId = parseBlockbenchModelId(data["model"].asText())
+            val modelId = parseBlockbenchModelId(data["name"].asText())
             val model = blockbenchModelsById.getValue(modelId)
             val scale = data["scale"]?.floatValue() ?: 1.0F
             BlockbenchCharacterModel(model, scale)
