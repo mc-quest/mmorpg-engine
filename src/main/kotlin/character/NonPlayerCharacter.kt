@@ -5,9 +5,11 @@ import com.shadowforgedmmo.engine.combat.Damage
 import com.shadowforgedmmo.engine.instance.Instance
 import com.shadowforgedmmo.engine.math.Vector3
 import com.shadowforgedmmo.engine.runtime.Runtime
+import com.shadowforgedmmo.engine.script.idToPythonClassName
 import com.shadowforgedmmo.engine.util.schedulerManager
 import net.kyori.adventure.text.Component
 import net.minestom.server.particle.Particle
+import org.python.core.Py
 import com.shadowforgedmmo.engine.script.NonPlayerCharacter as ScriptNonPlayerCharacter
 
 class NonPlayerCharacter(
@@ -33,7 +35,14 @@ class NonPlayerCharacter(
     private val bossFight = blueprint.bossFight?.create(this)
     private val interactionIndices = mutableMapOf<Pair<PlayerCharacter, Interaction>, Int>()
     private val attackers = mutableSetOf<PlayerCharacter>()
-    override val handle = ScriptNonPlayerCharacter(this)
+    override val handle = blueprint.scriptId?.let {
+        // TODO: make this script instantiation reusable for SkillExecutors, etc.
+        val scriptClassName = idToPythonClassName(it)
+        runtime.interpreter.exec("from $it import $scriptClassName")
+        val scriptClass = runtime.interpreter.get(scriptClassName)
+        scriptClass.__call__(Py.java2py(this))
+            .__tojava__(ScriptNonPlayerCharacter::class.java) as ScriptNonPlayerCharacter
+    } ?: ScriptNonPlayerCharacter(this)
 
     override fun spawn() {
         super.spawn()
