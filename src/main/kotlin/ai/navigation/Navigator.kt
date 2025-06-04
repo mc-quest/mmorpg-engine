@@ -4,7 +4,7 @@ import com.shadowforgedmmo.engine.character.NonPlayerCharacter
 import com.shadowforgedmmo.engine.math.Vector3
 import com.shadowforgedmmo.engine.util.fromMinestom
 import com.shadowforgedmmo.engine.util.toMinestom
-import net.minestom.server.attribute.Attribute
+import net.minestom.server.entity.attribute.Attribute
 
 class Navigator(private val character: NonPlayerCharacter) {
     val pathPosition: Vector3?
@@ -16,7 +16,7 @@ class Navigator(private val character: NonPlayerCharacter) {
     private var lastStepTimeMillis = 0L
 
     fun setPathTo(target: Vector3, speed: Double): Boolean {
-        character.entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = (speed / 20.0).toFloat()
+        character.entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = speed / 20.0
         return navigator.setPathTo(target.toMinestom())
     }
 
@@ -24,7 +24,7 @@ class Navigator(private val character: NonPlayerCharacter) {
 
     fun tick() {
         val stepSound = character.blueprint.stepSound
-        if (pathPosition != null && character.isOnGround && stepSound != null) {
+        if (!navigator.isComplete && character.isOnGround && stepSound != null) {
             val timeMillis = character.runtime.timeMillis
             if (timeMillis - lastStepTimeMillis > 600) { // TODO: delay should depend on speed
                 character.emitSound(stepSound)

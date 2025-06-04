@@ -18,7 +18,7 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
-import net.minestom.server.attribute.Attribute
+import net.minestom.server.entity.attribute.Attribute
 import net.minestom.server.entity.Player
 import net.minestom.server.network.packet.server.play.HitAnimationPacket
 import net.minestom.server.potion.Potion
@@ -245,10 +245,10 @@ class PlayerCharacter(
         entity.playSound(sound, from.toMinestom())
 
     fun disableMovement() {
-        entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = 0.0F
+        entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = 0.0
     }
 
     fun enableMovement() {
-        entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = 0.1F
+        entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = 0.1
     }
 }

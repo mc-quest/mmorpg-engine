@@ -16,14 +16,15 @@ class EntityHuman(private val skin: Skin) : EntityCreature(EntityType.PLAYER) {
             )
         )
         val entry = PlayerInfoUpdatePacket.Entry(
-            getUuid(),
+            uuid,
             "",
             properties,
             false,
             0,
             GameMode.ADVENTURE,
             null,
-            null
+            null,
+            0
         )
         player.sendPacket(
             PlayerInfoUpdatePacket(
@@ -38,7 +39,7 @@ class EntityHuman(private val skin: Skin) : EntityCreature(EntityType.PLAYER) {
         // Enable skin layers
         player.sendPackets(
             EntityMetaDataPacket(
-                getEntityId(),
+                entityId,
                 mapOf(17 to Metadata.Byte(127.toByte()))
             )
         )
@@ -47,6 +48,6 @@ class EntityHuman(private val skin: Skin) : EntityCreature(EntityType.PLAYER) {
     override fun updateOldViewer(player: Player) {
         super.updateOldViewer(player)
 
-        player.sendPacket(PlayerInfoRemovePacket(getUuid()))
+        player.sendPacket(PlayerInfoRemovePacket(uuid))
     }
 }

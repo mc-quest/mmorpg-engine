@@ -1,29 +1,27 @@
 package com.shadowforgedmmo.engine.instance
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.kyori.adventure.sound.Sound
 import com.shadowforgedmmo.engine.character.PlayerCharacter
 import com.shadowforgedmmo.engine.datastructure.SpatialHash2
 import com.shadowforgedmmo.engine.datastructure.SpatialHash3
 import com.shadowforgedmmo.engine.gameobject.GameObject
 import com.shadowforgedmmo.engine.gameobject.GameObjectSpawner
-import com.shadowforgedmmo.engine.gameobject.OBJECT_TAG
 import com.shadowforgedmmo.engine.math.*
 import com.shadowforgedmmo.engine.quest.Quest
 import com.shadowforgedmmo.engine.resource.parseId
 import com.shadowforgedmmo.engine.runtime.Runtime
-import com.shadowforgedmmo.engine.util.toMinestom
 import com.shadowforgedmmo.engine.world.parseWorldId
 import com.shadowforgedmmo.engine.world.worldIdToWorldPath
 import com.shadowforgedmmo.engine.zone.Zone
 import com.shadowforgedmmo.engine.zone.parseZoneId
+import net.kyori.adventure.sound.Sound
 import net.minestom.server.MinecraftServer
 import net.minestom.server.adventure.AdventurePacketConvertor
-import net.minestom.server.instance.AnvilLoader
 import net.minestom.server.instance.InstanceContainer
+import net.minestom.server.instance.anvil.AnvilLoader
 import net.minestom.server.network.packet.server.play.ParticlePacket
 import net.minestom.server.particle.Particle
-import net.minestom.server.utils.PacketUtils
+import net.minestom.server.utils.PacketSendingUtils
 import net.minestom.server.world.DimensionType
 import java.io.File
 import java.util.*
@@ -96,7 +94,7 @@ class Instance(
     inline fun <reified T : GameObject> getObjectsInBox(box: BoundingBox3) =
         objects.query(box).filterIsInstance<T>().filter { it.boundingBox.intersects(box) }
 
-    fun playSound(position: Vector3, sound: Sound) = PacketUtils.sendGroupedPacket(
+    fun playSound(position: Vector3, sound: Sound) = PacketSendingUtils.sendGroupedPacket(
         getNearbyPlayers(position, soundRange(sound)),
         AdventurePacketConvertor.createSoundPacket(sound, position.x, position.y, position.z)
     )
@@ -107,14 +105,16 @@ class Instance(
     fun spawnParticle(
         position: Vector3,
         particle: Particle,
+        overrideLimiter: Boolean = false,
         longDistance: Boolean = false,
         offset: Vector3 = Vector3.ZERO,
         maxSpeed: Double = 1.0,
         count: Int = 1
-    ) = PacketUtils.sendGroupedPacket(
+    ) = PacketSendingUtils.sendGroupedPacket(
         getNearbyPlayers(position, particleRange(longDistance)),
         ParticlePacket(
             particle,
+            overrideLimiter,
             longDistance,
             position.x,
             position.y,

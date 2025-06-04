@@ -14,7 +14,7 @@ import team.unnamed.hephaestus.minestom.ModelEntity
 val hitboxEntityTypes = loadJsonResource(
     "data/hitbox_entity_types.json",
     Array<String>::class
-).map(EntityType::fromNamespaceId)
+).map(EntityType::fromKey)
 
 abstract class CharacterModel {
     abstract fun createEntity(): EntityCreature
@@ -113,7 +113,7 @@ fun deserializeCharacterModel(
         return when (prefix) {
             "models" -> BlockbenchCharacterModel(blockbenchModelsById.getValue(id))
             "skins" -> SkinCharacterModel(skinsById.getValue(id))
-            "minecraft" -> EntityCharacterModel(EntityType.fromNamespaceId(fullId))
+            "minecraft" -> EntityCharacterModel(EntityType.fromKey(fullId))
             else -> throw IllegalArgumentException()
         }
     }
@@ -136,7 +136,7 @@ fun deserializeCharacterModel(
         }
 
         "entity" -> {
-            val entityType = EntityType.fromNamespaceId(data["entity"].asText())
+            val entityType = EntityType.fromKey(data["entity"].asText())
             val equipment = data["equipment"]?.let {
                 deserializeCharacterModelEquipment(it, blockbenchItemModelsById)
             } ?: CharacterModelEquipment()

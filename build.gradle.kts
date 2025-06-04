@@ -7,13 +7,24 @@ group = "com.shadowforgedmmo"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    mavenLocal()
+
     mavenCentral()
+
     maven("https://jitpack.io")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        content {
+            // Use only local repositories
+            excludeModule("team.unnamed", "hephaestus-api")
+            excludeModule("team.unnamed", "hephaestus-reader-blockbench")
+            excludeModule("team.unnamed", "hephaestus-runtime-minestom")
+        }
+    }
 }
 
 dependencies {
-    implementation("net.minestom:minestom-snapshots:19bb74e942")
+    implementation("net.minestom:minestom-snapshots:1_21_5-468b85eb42")
 
     implementation("com.google.guava:guava:33.0.0-jre")
 
@@ -25,8 +36,8 @@ dependencies {
 
     implementation("org.python:jython-standalone:2.7.4b2")
 
-    implementation("team.unnamed:creative-api:1.5.0")
-    implementation("team.unnamed:creative-serializer-minecraft:1.5.0")
+    implementation("team.unnamed:creative-api:1.8.2-SNAPSHOT")
+    implementation("team.unnamed:creative-serializer-minecraft:1.8.2-SNAPSHOT")
 
     implementation("team.unnamed:mocha:3.0.0")
     implementation("team.unnamed:hephaestus-api:0.11.1-dev-SNAPSHOT")

@@ -8,9 +8,7 @@ import team.unnamed.hephaestus.reader.ModelReader
 import java.io.File
 
 class BlockbenchItemModel(val id: String, val customModelData: Int) {
-    val itemStack = ItemStack.builder(Material.GLOW_ITEM_FRAME).meta {
-        it.customModelData(customModelData)
-    }.build()
+    val itemStack = ItemStack.builder(Material.GLOW_ITEM_FRAME).build()
 }
 
 fun parseBlockbenchItemModelId(id: String) = parseId(id, "item_models")

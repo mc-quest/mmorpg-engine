@@ -35,7 +35,8 @@ class PackBuilder(private val resourceLoader: ResourceLoader) {
 
     private fun writePackMeta() {
         val config = resourceLoader.loadConfig()
-        pack.packMeta(22, "${config.name} resource pack")
+        // TODO: STORE PACK FORMAT IN RESOURCE FILE
+        pack.packMeta(46, "${config.name} resource pack")
     }
 
     private fun writeBasePack() {
@@ -51,7 +52,7 @@ class PackBuilder(private val resourceLoader: ResourceLoader) {
             val key = Key.key(Namespaces.ENGINE_SOUNDS, it)
             val sound = Sound.sound(
                 key,
-                Writable.resource(this::class.java.classLoader, "sounds/${it}.ogg")
+                Writable.resource(this::class.java.classLoader, "sounds/$it.ogg")
             )
             val soundEvent = SoundEvent.soundEvent(
                 key,
