@@ -42,7 +42,7 @@ class BlockbenchCharacterModel(
 }
 
 class BlockbenchCharacterModelEntity(characterModel: BlockbenchCharacterModel) : ModelEntity(
-    EntityType.ARMOR_STAND,
+    EntityType.TADPOLE,
     characterModel.blockbenchModel.model,
     characterModel.scale
 ) {
@@ -52,11 +52,7 @@ class BlockbenchCharacterModelEntity(characterModel: BlockbenchCharacterModel) :
         val width = boundingBox.width() * characterModel.scale
         val height = boundingBox.height() * characterModel.scale
         setBoundingBox(width, height, width)
-
-        val meta = getEntityMeta() as ArmorStandMeta
-        meta.isMarker = true
-        meta.isHasNoGravity = false
-
+        setNoGravity(false)
         hitbox.isInvisible = true
     }
 
