@@ -123,8 +123,6 @@ abstract class Character(
         velocity += impulse / mass
     }
 
-    abstract fun interact(pc: PlayerCharacter)
-
     fun displayName(stance: Stance) = Component.text(name, stance.color)
 
     fun displayNameWithLevel(stance: Stance) =

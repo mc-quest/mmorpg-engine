@@ -1,5 +1,6 @@
 package com.shadowforgedmmo.engine.gameobject
 
+import com.shadowforgedmmo.engine.character.PlayerCharacter
 import com.shadowforgedmmo.engine.instance.Instance
 import com.shadowforgedmmo.engine.math.BoundingBox3
 import com.shadowforgedmmo.engine.math.Position
@@ -109,4 +110,6 @@ abstract class GameObject(
         val extents = halfExtents * 2.0
         entity.boundingBox = BoundingBox(extents.x, extents.y, extents.z)
     }
+
+    open fun interact(pc: PlayerCharacter) = Unit
 }

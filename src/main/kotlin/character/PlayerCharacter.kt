@@ -2,6 +2,7 @@ package com.shadowforgedmmo.engine.character
 
 import com.shadowforgedmmo.engine.combat.Damage
 import com.shadowforgedmmo.engine.entity.Hologram
+import com.shadowforgedmmo.engine.gameobject.GameObject
 import com.shadowforgedmmo.engine.instance.Instance
 import com.shadowforgedmmo.engine.item.Inventory
 import com.shadowforgedmmo.engine.math.Vector3
@@ -20,6 +21,8 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.title.Title
 import net.minestom.server.entity.attribute.Attribute
 import net.minestom.server.entity.Player
+import net.minestom.server.entity.PlayerHand
+import net.minestom.server.event.player.PlayerEntityInteractEvent
 import net.minestom.server.network.packet.server.play.HitAnimationPacket
 import net.minestom.server.potion.Potion
 import net.minestom.server.potion.PotionEffect
@@ -43,6 +46,10 @@ class PlayerCharacter(
     override val entity: Player,
     data: PlayerCharacterData
 ) : Character(spawner, instance, runtime) {
+    companion object {
+        fun fromEntity(player: Player) = GameObject.fromEntity(player) as? PlayerCharacter
+    }
+
     override val name
         get() = entity.username
 
@@ -144,6 +151,8 @@ class PlayerCharacter(
                 Component.empty()
             )
         )
+
+        entity.heal()
 
         entity.addEffect(Potion(PotionEffect.BLINDNESS, 1, secondsToTicks(4.0)))
 
@@ -250,5 +259,10 @@ class PlayerCharacter(
 
     fun enableMovement() {
         entity.getAttribute(Attribute.MOVEMENT_SPEED).baseValue = 0.1
+    }
+
+    fun handleEntityInteract(event: PlayerEntityInteractEvent) {
+        if (event.hand != PlayerHand.MAIN) return
+        fromEntity(event.target)?.interact(this)
     }
 }
