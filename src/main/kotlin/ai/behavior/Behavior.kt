@@ -79,7 +79,7 @@ fun deserializeBehaviorBlueprint(data: JsonNode): BehaviorBlueprint =
         "look_at_target" -> deserializeLookAtTargetBlueprint(data)
         "target_is_in_range" -> deserializeTargetIsInRangeBlueprint(data)
         "target_is_to_right" -> deserializeTargetIsToRightBlueprint(data)
-        "melee_attack" -> deserializeMeleeAttackBlueprint(data)
+        "box_attack" -> deserializeBoxAttackBlueprint(data)
         "was_damaged" -> deserializeWasDamagedBlueprint(data)
         "emit_sound" -> deserializeEmitSoundBlueprint(data)
         "emit_particle" -> deserializeEmitParticleBlueprint(data)

@@ -15,18 +15,18 @@ import com.shadowforgedmmo.engine.math.Vector3
 import com.shadowforgedmmo.engine.math.deserializeVector3
 import com.shadowforgedmmo.engine.sound.deserializeSound
 
-class MeleeAttack(
+class BoxAttack(
     private val damage: Damage,
-    private val hitboxOffset: Vector3,
-    private val hitboxWidth: Double,
-    private val hitboxHeight: Double,
+    private val offset: Vector3,
+    private val width: Double,
+    private val height: Double,
     private val knockback: Vector3,
     private val hitSound: Sound?,
     private val missSound: Sound?
 ) : Task() {
     override fun update(character: NonPlayerCharacter): BehaviorStatus {
-        val center = character.position.toVector3() + character.position.localToGlobalDirection(hitboxOffset)
-        val halfExtents = Vector3(hitboxWidth, hitboxHeight, hitboxWidth) / 2.0
+        val center = character.position.toVector3() + character.position.localToGlobalDirection(offset)
+        val halfExtents = Vector3(width, height, width) / 2.0
         val hits = character.instance.getObjectsInBox<Character>(BoundingBox3.from(center, halfExtents))
             .filter { it != character && it.isAlive && character.getStance(it) == Stance.HOSTILE }
 
@@ -46,31 +46,31 @@ class MeleeAttack(
     }
 }
 
-class MeleeAttackBlueprint(
+class BoxAttackBlueprint(
     private val damage: Damage,
-    private val hitboxOffset: Vector3,
-    private val hitboxWidth: Double,
-    private val hitboxHeight: Double,
+    private val offset: Vector3,
+    private val width: Double,
+    private val height: Double,
     private val knockback: Vector3,
     private val hitSound: Sound?,
     private val missSound: Sound?
 ) : BehaviorBlueprint() {
-    override fun create() = MeleeAttack(
+    override fun create() = BoxAttack(
         damage,
-        hitboxOffset,
-        hitboxWidth,
-        hitboxHeight,
+        offset,
+        width,
+        height,
         knockback,
         hitSound,
         missSound
     )
 }
 
-fun deserializeMeleeAttackBlueprint(data: JsonNode) = MeleeAttackBlueprint(
+fun deserializeBoxAttackBlueprint(data: JsonNode) = BoxAttackBlueprint(
     deserializeDamage(data["damage"]),
-    deserializeVector3(data["hitbox_offset"]),
-    data["hitbox_width"].asDouble(),
-    data["hitbox_height"].asDouble(),
+    deserializeVector3(data["offset"]),
+    data["width"].asDouble(),
+    data["height"].asDouble(),
     deserializeVector3(data["knockback"]),
     data["hit_sound"]?.let(::deserializeSound),
     data["miss_sound"]?.let(::deserializeSound)
