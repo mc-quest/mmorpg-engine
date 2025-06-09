@@ -69,6 +69,8 @@ class NonPlayerCharacter(
     }
 
     override fun interact(pc: PlayerCharacter) {
+        if (getStance(pc) == Stance.HOSTILE) return
+
         val availableInteractions = blueprint.interactions.filter {
             it.isAvailable(pc)
         }
